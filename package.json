@@ -1,0 +1,125 @@
+{
+  "name": "atomsk-gui",
+  "version": "0.1.0",
+  "description": "Graphical front end for the Atomsk command-line tool",
+  "homepage": "https://github.com/Kuina-chan/atomsk-gui",
+  "author": "Kuina-chan",
+  "license": "GPL-3.0-or-later",
+  "main": "dist/main.js",
+  "desktopName": "io.github.kuina_chan.AtomskGui.desktop",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && electron .",
+    "test": "tsc && node --test \"dist/**/*.test.js\"",
+    "dist:linux": "tsc && electron-builder --linux",
+    "dist:windows": "tsc && electron-builder --windows",
+    "dist:mac": "tsc && electron-builder --mac zip --arm64"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "electron": "^45.0.0",
+    "electron-builder": "^26.0.0",
+    "typescript": "^7.0.0"
+  },
+  "build": {
+    "appId": "io.github.kuina_chan.AtomskGui",
+    "productName": "Atomsk GUI",
+    "executableName": "atomsk-gui",
+    "icon": "icon.png",
+    "artifactName": "${name}-${version}-${arch}.${ext}",
+    "files": [
+      "dist/**/*.js",
+      "!dist/**/*.test.js",
+      "src/index.html",
+      "catalog.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm",
+        "flatpak"
+      ],
+      "category": "Education;Science;Physics",
+      "maintainer": "Kuina-chan",
+      "syncDesktopName": true,
+      "synopsis": "Graphical front end for the Atomsk atomic structure tool",
+      "description": "Build, modify and convert atomic structures with the Atomsk command-line program. Atomsk is not bundled: install it separately or let the app download it on first start.",
+      "desktop": {
+        "entry": {
+          "GenericName": "Atomic structure editor",
+          "Keywords": "atomsk;crystal;lattice;atoms;"
+        }
+      }
+    },
+    "deb": {
+      "depends": [
+        "libgtk-3-0",
+        "libnotify4",
+        "libnss3",
+        "libxss1",
+        "libxtst6",
+        "xdg-utils",
+        "libatspi2.0-0",
+        "libuuid1",
+        "libsecret-1-0",
+        "tar"
+      ],
+      "fpm": [
+        "linux-build/io.github.kuina_chan.AtomskGui.metainfo.xml=/usr/share/metainfo/io.github.kuina_chan.AtomskGui.metainfo.xml"
+      ]
+    },
+    "rpm": {
+      "depends": [
+        "gtk3",
+        "libnotify",
+        "nss",
+        "libXScrnSaver",
+        "(libXtst or libXtst6)",
+        "xdg-utils",
+        "at-spi2-core",
+        "(libuuid or libuuid1)",
+        "tar"
+      ],
+      "fpm": [
+        "linux-build/io.github.kuina_chan.AtomskGui.metainfo.xml=/usr/share/metainfo/io.github.kuina_chan.AtomskGui.metainfo.xml"
+      ]
+    },
+    "flatpak": {
+      "files": [
+        [
+          "linux-build/io.github.kuina_chan.AtomskGui.metainfo.xml",
+          "/share/metainfo/io.github.kuina_chan.AtomskGui.metainfo.xml"
+        ]
+      ]
+    },
+    "win": {
+      "target": "zip",
+      "extraFiles": [
+        {
+          "from": "windows-build/README.md",
+          "to": "README.md"
+        }
+      ]
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.education",
+      "darkModeSupport": true,
+      "icon": "icon.png"
+    }
+  },
+  "allowScripts": {
+    "electron-winstaller@5.4.0": true
+  }
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.kuina_chan.AtomskGui</id>
+  <name>Atomsk GUI</name>
+  <summary>Graphical front end for the Atomsk atomic structure tool</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <description>
+    <p>Atomsk GUI lets you build, modify and convert atomic structures with the Atomsk command-line program. Pick a crystal lattice, fill in its parameters, then apply any Atomsk option from searchable drop-down lists. All work is done by the Atomsk backend, which is not bundled: install it separately or let the app download it on first start.</p>
+  </description>
+  <launchable type="desktop-id">io.github.kuina_chan.AtomskGui.desktop</launchable>
+  <url type="homepage">https://github.com/Kuina-chan/atomsk-gui</url>
+  <url type="help">https://atomsk.univ-lille.fr/doc/en/index.html</url>
+  <provides>
+    <binary>atomsk-gui</binary>
+  </provides>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-10-24"/>
+  </releases>
+</component>

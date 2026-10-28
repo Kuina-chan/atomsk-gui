@@ -1,0 +1,6 @@
+* text=auto eol=lf
+# Shipped to Windows users inside the zip.
+windows-build/README.md eol=crlf
+*.png binary
+*.ico binary
+*.zip binary

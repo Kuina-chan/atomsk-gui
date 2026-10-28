@@ -1,0 +1,3065 @@
+{
+  "lattices": [
+    {
+      "id": "sc",
+      "label": "Simple cubic (sc)",
+      "description": "Simple cubic lattice.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "bcc",
+      "label": "Body-centered cubic (bcc)",
+      "description": "Body-centered cubic; two species give an interpenetrating simple cubic (CsCl) lattice.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2 (optional, gives CsCl)",
+          "kind": "species",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "CsCl",
+      "label": "Cesium chloride (CsCl)",
+      "description": "Interpenetrating simple cubic lattices (alias of bcc).",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "fcc",
+      "label": "Face-centered cubic (fcc)",
+      "description": "Face-centered cubic; two species create a random alloy.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2 (optional, alloy)",
+          "kind": "species",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "L12",
+      "label": "L1₂ cubic (L12)",
+      "description": "Ordered L1₂ cubic structure (e.g. Ni3Al).",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "fluorite",
+      "label": "Fluorite",
+      "description": "Cubic fluorite structure (e.g. CaF2).",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "diamond",
+      "label": "Diamond",
+      "description": "Diamond cubic; two species give a zincblende lattice.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2 (optional, gives zincblende)",
+          "kind": "species",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "zincblende",
+      "label": "Zincblende (zb)",
+      "description": "Zincblende cubic; a single species gives diamond.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2 (optional, otherwise diamond)",
+          "kind": "species",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "rocksalt",
+      "label": "Cubic rock-salt",
+      "description": "Cubic rock-salt structure (e.g. NaCl, MgO).",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "perovskite",
+      "label": "Cubic perovskite (per)",
+      "description": "Cubic ABO3 perovskite (e.g. SrTiO3).",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1 (A site)",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2 (B site)",
+          "kind": "species"
+        },
+        {
+          "name": "sp3",
+          "label": "Species 3 (oxygen)",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "A15",
+      "label": "A15 / Cr3Si",
+      "description": "A15 cubic structure (Cr3Si type).",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "C15",
+      "label": "C15 Laves phase",
+      "description": "Cubic C15 Laves phase.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "st",
+      "label": "Simple tetragonal (st)",
+      "description": "Simple tetragonal lattice.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "c",
+          "label": "Lattice constant c (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "bct",
+      "label": "Body-centered tetragonal (bct)",
+      "description": "Body-centered tetragonal lattice.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "c",
+          "label": "Lattice constant c (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "fct",
+      "label": "Face-centered tetragonal / L1₀ (fct)",
+      "description": "Face-centered tetragonal (L1₀) lattice.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "c",
+          "label": "Lattice constant c (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "hcp",
+      "label": "Hexagonal close-packed (hcp)",
+      "description": "Hexagonal close-packed lattice.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "c",
+          "label": "Lattice constant c (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wurtzite",
+      "label": "Wurtzite (wz)",
+      "description": "Hexagonal wurtzite structure.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "c",
+          "label": "Lattice constant c (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "graphite",
+      "label": "Graphite",
+      "description": "Graphite lattice (also hexagonal boron nitride with two species).",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "c",
+          "label": "Lattice constant c (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "C14",
+      "label": "C14 Laves phase",
+      "description": "Hexagonal C14 Laves phase.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "c",
+          "label": "Lattice constant c (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "C36",
+      "label": "C36 Laves phase",
+      "description": "Hexagonal C36 Laves phase.",
+      "params": [
+        {
+          "name": "a",
+          "label": "Lattice constant a (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "c",
+          "label": "Lattice constant c (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "id": "nanotube",
+      "label": "Nanotube (NT)",
+      "description": "Nanotube along Z; a0 is the first-neighbour distance, (m,n) the chiral indices.",
+      "params": [
+        {
+          "name": "a0",
+          "label": "First-neighbour distance a0 (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "m",
+          "label": "Chiral index m",
+          "kind": "int"
+        },
+        {
+          "name": "n",
+          "label": "Chiral index n",
+          "kind": "int"
+        },
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "options": [
+    {
+      "flag": "-add-atom",
+      "label": "Add atom at position",
+      "description": "Add an atom of the given species at a position.",
+      "args": [
+        {
+          "name": "species",
+          "label": "Species",
+          "kind": "species"
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "at"
+          ],
+          "default": "at"
+        },
+        {
+          "name": "x",
+          "label": "x (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "y",
+          "label": "y (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "z",
+          "label": "z (Å, or BOX expression)",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-add-atom",
+      "label": "Add atom relative to atom",
+      "description": "Add an atom at a vector relative to an existing atom.",
+      "args": [
+        {
+          "name": "species",
+          "label": "Species",
+          "kind": "species"
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "relative"
+          ],
+          "default": "relative"
+        },
+        {
+          "name": "index",
+          "label": "Reference atom index",
+          "kind": "int"
+        },
+        {
+          "name": "x",
+          "label": "x (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "y",
+          "label": "y (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "z",
+          "label": "z (Å, or BOX expression)",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-add-atom",
+      "label": "Add atom near atom",
+      "description": "Add an atom in the tetrahedral site next to an existing atom.",
+      "args": [
+        {
+          "name": "species",
+          "label": "Species",
+          "kind": "species"
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "near"
+          ],
+          "default": "near"
+        },
+        {
+          "name": "index",
+          "label": "Reference atom index",
+          "kind": "int"
+        }
+      ]
+    },
+    {
+      "flag": "-add-atom",
+      "label": "Add random atoms",
+      "description": "Add N atoms at random positions.",
+      "args": [
+        {
+          "name": "species",
+          "label": "Species",
+          "kind": "species"
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "random"
+          ],
+          "default": "random"
+        },
+        {
+          "name": "count",
+          "label": "Number of atoms N",
+          "kind": "int"
+        }
+      ]
+    },
+    {
+      "flag": "-add-shells",
+      "label": "Add shells",
+      "description": "Create core-shell model shells for a species (or all).",
+      "args": [
+        {
+          "name": "species",
+          "label": "Species or 'all'",
+          "kind": "string",
+          "default": "all"
+        }
+      ]
+    },
+    {
+      "flag": "-alignx",
+      "label": "Align cell with X",
+      "description": "Rotate so the first cell vector is along X and the second lies in the XY plane.",
+      "args": []
+    },
+    {
+      "flag": "-bind-shells",
+      "label": "Bind shells",
+      "description": "Re-associate shells with their cores (core-shell model).",
+      "args": []
+    },
+    {
+      "flag": "-cell",
+      "label": "Modify cell",
+      "description": "Add to, remove from or set a cell length, angle or component.",
+      "args": [
+        {
+          "name": "component",
+          "label": "Component",
+          "kind": "choice",
+          "choices": [
+            "a",
+            "b",
+            "c",
+            "alpha",
+            "beta",
+            "gamma",
+            "H1",
+            "H2",
+            "H3",
+            "x",
+            "y",
+            "z",
+            "xy",
+            "xz",
+            "yx",
+            "yz",
+            "zx",
+            "zy",
+            "xyz"
+          ]
+        },
+        {
+          "name": "operation",
+          "label": "Operation",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "set"
+          ]
+        },
+        {
+          "name": "value",
+          "label": "Value (Å or degrees)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-center",
+      "label": "Center",
+      "description": "Move all atoms so the given atom (or the center of mass) is at the box center.",
+      "args": [
+        {
+          "name": "index",
+          "label": "Atom index, or 0/com for center of mass",
+          "kind": "string",
+          "default": "com"
+        }
+      ]
+    },
+    {
+      "flag": "-crack",
+      "label": "Crack",
+      "description": "Insert a straight crack (mode I, II or III).",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Crack mode",
+          "kind": "choice",
+          "choices": [
+            "I",
+            "II",
+            "III"
+          ]
+        },
+        {
+          "name": "plane",
+          "label": "Plane condition",
+          "kind": "choice",
+          "choices": [
+            "stress",
+            "strain"
+          ]
+        },
+        {
+          "name": "ks",
+          "label": "Stress intensity factor Ks (GPa·Å^½)",
+          "kind": "float"
+        },
+        {
+          "name": "p1",
+          "label": "Crack tip position p1 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "p2",
+          "label": "Crack tip position p2 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "line",
+          "label": "Crack tip line direction ξ",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "normal",
+          "label": "Normal to crack plane n",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "mu",
+          "label": "Shear modulus μ (GPa)",
+          "kind": "float"
+        },
+        {
+          "name": "nu",
+          "label": "Poisson ratio ν",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-cut",
+      "label": "Cut",
+      "description": "Remove atoms above or below a plane.",
+      "args": [
+        {
+          "name": "side",
+          "label": "Remove atoms",
+          "kind": "choice",
+          "choices": [
+            "above",
+            "below"
+          ]
+        },
+        {
+          "name": "d",
+          "label": "Distance d (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "normal",
+          "label": "Normal direction (x, y, z or Miller [hkl])",
+          "kind": "string",
+          "default": "z"
+        }
+      ]
+    },
+    {
+      "flag": "-deform",
+      "label": "Deform (uniaxial)",
+      "description": "Apply uniaxial strain along x, y or z, optionally with Poisson's ratio.",
+      "args": [
+        {
+          "name": "component",
+          "label": "Component",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "strain",
+          "label": "Strain ε (append % for percent)",
+          "kind": "string"
+        },
+        {
+          "name": "nu",
+          "label": "Poisson ratio ν",
+          "kind": "float",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "flag": "-deform",
+      "label": "Deform (shear)",
+      "description": "Apply simple shear strain.",
+      "args": [
+        {
+          "name": "component",
+          "label": "Component",
+          "kind": "choice",
+          "choices": [
+            "xy",
+            "xz",
+            "yz",
+            "yx",
+            "zx",
+            "zy"
+          ]
+        },
+        {
+          "name": "strain",
+          "label": "Strain ε (append % for percent)",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-dislocation",
+      "label": "Dislocation (screw)",
+      "description": "Insert a straight screw dislocation.",
+      "args": [
+        {
+          "name": "p1",
+          "label": "Position p1 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "p2",
+          "label": "Position p2 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "character",
+          "label": "Character",
+          "kind": "choice",
+          "choices": [
+            "screw"
+          ],
+          "default": "screw"
+        },
+        {
+          "name": "line",
+          "label": "Dislocation line direction ξ",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "normal",
+          "label": "Normal to cut plane n",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "b",
+          "label": "Burgers vector norm b (Å)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-dislocation",
+      "label": "Dislocation (edge)",
+      "description": "Insert a straight edge dislocation.",
+      "args": [
+        {
+          "name": "p1",
+          "label": "Position p1 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "p2",
+          "label": "Position p2 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "character",
+          "label": "Character",
+          "kind": "choice",
+          "choices": [
+            "edge",
+            "edge_add",
+            "edge_rm"
+          ]
+        },
+        {
+          "name": "line",
+          "label": "Dislocation line direction ξ",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "normal",
+          "label": "Normal to cut plane n",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "b",
+          "label": "Burgers vector norm b (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "nu",
+          "label": "Poisson ratio ν",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-dislocation",
+      "label": "Dislocation (mixed)",
+      "description": "Insert a mixed dislocation (requires anisotropic elasticity via -properties).",
+      "args": [
+        {
+          "name": "p1",
+          "label": "Position p1 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "p2",
+          "label": "Position p2 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "character",
+          "label": "Character",
+          "kind": "choice",
+          "choices": [
+            "mixed"
+          ],
+          "default": "mixed"
+        },
+        {
+          "name": "line",
+          "label": "Dislocation line direction ξ",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "normal",
+          "label": "Normal to cut plane n",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "b1",
+          "label": "Burgers vector b1 (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "b2",
+          "label": "Burgers vector b2 (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "b3",
+          "label": "Burgers vector b3 (Å)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-dislocation",
+      "label": "Dislocation loop",
+      "description": "Insert a dislocation loop.",
+      "args": [
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "loop"
+          ],
+          "default": "loop"
+        },
+        {
+          "name": "x",
+          "label": "Center x (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "y",
+          "label": "Center y (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "z",
+          "label": "Center z (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "normal",
+          "label": "Normal to loop plane n",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "radius",
+          "label": "Loop radius (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "bx",
+          "label": "Burgers vector bx (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "by",
+          "label": "Burgers vector by (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "bz",
+          "label": "Burgers vector bz (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "nu",
+          "label": "Poisson ratio ν",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-dislocation",
+      "label": "Dislocation from file",
+      "description": "Insert dislocations defined in a file.",
+      "args": [
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "file"
+          ],
+          "default": "file"
+        },
+        {
+          "name": "file",
+          "label": "Dislocation file",
+          "kind": "string"
+        },
+        {
+          "name": "nu",
+          "label": "Poisson ratio ν",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-disturb",
+      "label": "Disturb (max displacement)",
+      "description": "Random displacement of every atom up to a maximum.",
+      "args": [
+        {
+          "name": "dmax",
+          "label": "Maximum displacement (Å)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-disturb",
+      "label": "Disturb (per axis)",
+      "description": "Random displacement of every atom with a maximum per Cartesian axis.",
+      "args": [
+        {
+          "name": "dx",
+          "label": "Maximum dx (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "dy",
+          "label": "Maximum dy (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "dz",
+          "label": "Maximum dz (Å)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-duplicate",
+      "label": "Duplicate",
+      "description": "Duplicate the system along the three cell vectors (build a supercell).",
+      "args": [
+        {
+          "name": "nx",
+          "label": "Nx",
+          "kind": "int",
+          "default": "1"
+        },
+        {
+          "name": "ny",
+          "label": "Ny",
+          "kind": "int",
+          "default": "1"
+        },
+        {
+          "name": "nz",
+          "label": "Nz",
+          "kind": "int",
+          "default": "1"
+        }
+      ]
+    },
+    {
+      "flag": "-fractional",
+      "label": "Fractional coordinates",
+      "description": "Convert positions to fractional coordinates and force fractional output.",
+      "args": []
+    },
+    {
+      "flag": "-freeze",
+      "label": "Freeze atoms (all)",
+      "description": "Mark all atoms as frozen along the given axes.",
+      "args": [
+        {
+          "name": "axis",
+          "label": "Axes to freeze",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z",
+            "xy",
+            "xz",
+            "yz",
+            "xyz",
+            "all"
+          ]
+        }
+      ]
+    },
+    {
+      "flag": "-freeze",
+      "label": "Freeze atoms (above/below plane)",
+      "description": "Freeze atoms above or below a plane along the given axes.",
+      "args": [
+        {
+          "name": "axis",
+          "label": "Axes to freeze",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z",
+            "xy",
+            "xz",
+            "yz",
+            "xyz",
+            "all"
+          ]
+        },
+        {
+          "name": "side",
+          "label": "Freeze atoms",
+          "kind": "choice",
+          "choices": [
+            "above",
+            "below"
+          ]
+        },
+        {
+          "name": "d",
+          "label": "Distance d (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "normal",
+          "label": "Normal direction (x, y, z or Miller [hkl])",
+          "kind": "string",
+          "default": "z"
+        }
+      ]
+    },
+    {
+      "flag": "-mirror",
+      "label": "Mirror",
+      "description": "Apply a mirror transformation.",
+      "args": [
+        {
+          "name": "d",
+          "label": "Distance d (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "normal",
+          "label": "Normal direction (x, y, z or Miller [hkl])",
+          "kind": "string",
+          "default": "z"
+        }
+      ]
+    },
+    {
+      "flag": "-orient",
+      "label": "Orient",
+      "description": "Rotate the system from one crystallographic orientation to another.",
+      "args": [
+        {
+          "name": "x_from",
+          "label": "Current X direction, e.g. [100]",
+          "kind": "string"
+        },
+        {
+          "name": "y_from",
+          "label": "Current Y direction, e.g. [010]",
+          "kind": "string"
+        },
+        {
+          "name": "z_from",
+          "label": "Current Z direction, e.g. [001]",
+          "kind": "string"
+        },
+        {
+          "name": "x_to",
+          "label": "New X direction",
+          "kind": "string"
+        },
+        {
+          "name": "y_to",
+          "label": "New Y direction",
+          "kind": "string"
+        },
+        {
+          "name": "z_to",
+          "label": "New Z direction",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-orthogonal-cell",
+      "label": "Orthogonal cell",
+      "description": "Find an equivalent orthogonal cell preserving periodicity.",
+      "args": []
+    },
+    {
+      "flag": "-properties",
+      "label": "Properties from file",
+      "description": "Define system or per-atom properties from a text file.",
+      "args": [
+        {
+          "name": "file",
+          "label": "Properties file",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-rebox",
+      "label": "Rebox",
+      "description": "Recompute a rectangular bounding box (inaccurate; check the result).",
+      "args": []
+    },
+    {
+      "flag": "-reduce-cell",
+      "label": "Reduce cell",
+      "description": "Shorten the cell while preserving periodicity (x, y, z, or p for primitive cell; none for all directions).",
+      "args": [
+        {
+          "name": "direction",
+          "label": "Direction",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z",
+            "p"
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "flag": "-remove-atom",
+      "label": "Remove atom by index",
+      "description": "Remove the atom with the given index.",
+      "args": [
+        {
+          "name": "index",
+          "label": "Atom index",
+          "kind": "int"
+        }
+      ]
+    },
+    {
+      "flag": "-remove-atom",
+      "label": "Remove atoms by species",
+      "description": "Remove all atoms of a species.",
+      "args": [
+        {
+          "name": "species",
+          "label": "Species",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "flag": "-remove-atom",
+      "label": "Remove selected atoms",
+      "description": "Remove the atoms in the current selection.",
+      "args": [
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "select"
+          ],
+          "default": "select"
+        }
+      ]
+    },
+    {
+      "flag": "-remove-doubles",
+      "label": "Remove doubles",
+      "description": "Remove atoms closer than a given distance.",
+      "args": [
+        {
+          "name": "distance",
+          "label": "Distance (Å)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-remove-property",
+      "label": "Remove property",
+      "description": "Remove an auxiliary property (or 'all').",
+      "args": [
+        {
+          "name": "property",
+          "label": "Property name or 'all'",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-remove-shells",
+      "label": "Remove shells",
+      "description": "Remove shells for a species (or all).",
+      "args": [
+        {
+          "name": "species",
+          "label": "Species or 'all'",
+          "kind": "string",
+          "default": "all"
+        }
+      ]
+    },
+    {
+      "flag": "-roll",
+      "label": "Roll",
+      "description": "Bend the system into a circle around a Cartesian axis.",
+      "args": [
+        {
+          "name": "direction",
+          "label": "Direction to roll",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "angle",
+          "label": "Angle θ (degrees)",
+          "kind": "float"
+        },
+        {
+          "name": "axis",
+          "label": "Rotation axis",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        }
+      ]
+    },
+    {
+      "flag": "-rotate",
+      "label": "Rotate around Cartesian axis",
+      "description": "Rotate the system around x, y or z.",
+      "args": [
+        {
+          "name": "center",
+          "label": "Center of rotation (com = center of mass)",
+          "kind": "choice",
+          "choices": [
+            "com"
+          ],
+          "optional": true
+        },
+        {
+          "name": "axis",
+          "label": "Axis",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "angle",
+          "label": "Angle θ (degrees)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-rotate",
+      "label": "Rotate around crystal direction",
+      "description": "Rotate around a direction given by Miller indices.",
+      "args": [
+        {
+          "name": "center",
+          "label": "Center of rotation (com = center of mass)",
+          "kind": "choice",
+          "choices": [
+            "com"
+          ],
+          "optional": true
+        },
+        {
+          "name": "direction",
+          "label": "Miller indices, e.g. [111]",
+          "kind": "string"
+        },
+        {
+          "name": "angle",
+          "label": "Angle θ (degrees)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-rotate",
+      "label": "Rotate around vector",
+      "description": "Rotate around a Cartesian vector.",
+      "args": [
+        {
+          "name": "center",
+          "label": "Center of rotation (com = center of mass)",
+          "kind": "choice",
+          "choices": [
+            "com"
+          ],
+          "optional": true
+        },
+        {
+          "name": "vx",
+          "label": "Vx",
+          "kind": "float"
+        },
+        {
+          "name": "vy",
+          "label": "Vy",
+          "kind": "float"
+        },
+        {
+          "name": "vz",
+          "label": "Vz",
+          "kind": "float"
+        },
+        {
+          "name": "angle",
+          "label": "Angle θ (degrees)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-rotate",
+      "label": "Rotate with matrix file",
+      "description": "Rotate using a 3x3 rotation matrix read from a file.",
+      "args": [
+        {
+          "name": "center",
+          "label": "Center of rotation (com = center of mass)",
+          "kind": "choice",
+          "choices": [
+            "com"
+          ],
+          "optional": true
+        },
+        {
+          "name": "file",
+          "label": "Rotation matrix file",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-round-off",
+      "label": "Round off",
+      "description": "Round a property to a given accuracy.",
+      "args": [
+        {
+          "name": "property",
+          "label": "Property (X, Y, Z, XYZ, H, AUX or name)",
+          "kind": "string"
+        },
+        {
+          "name": "accuracy",
+          "label": "Accuracy, e.g. 1e-3",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select all",
+      "description": "Select all atoms.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "all"
+          ],
+          "default": "all"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select invert",
+      "description": "Invert the current selection.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "invert"
+          ],
+          "default": "invert"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select species",
+      "description": "Select atoms of a species.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "species",
+          "label": "Species",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select by index",
+      "description": "Select atoms by index or list, e.g. 1,5,8:12.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "index",
+          "label": "Index or list (e.g. 1,5,8:12)",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select from list file",
+      "description": "Select atoms listed in a file.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "list"
+          ],
+          "default": "list"
+        },
+        {
+          "name": "file",
+          "label": "List file",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select random atoms",
+      "description": "Select N random atoms of a species.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "random"
+          ],
+          "default": "random"
+        },
+        {
+          "name": "count",
+          "label": "Number N",
+          "kind": "int"
+        },
+        {
+          "name": "species",
+          "label": "Species",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select above/below plane",
+      "description": "Select atoms above or below a plane.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "side",
+          "label": "Side",
+          "kind": "choice",
+          "choices": [
+            "above",
+            "below"
+          ]
+        },
+        {
+          "name": "d",
+          "label": "Distance d (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "direction",
+          "label": "Normal direction (x, y, z or Miller [hkl])",
+          "kind": "string",
+          "default": "z"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select in/out of cell",
+      "description": "Select atoms inside or outside the cell.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "where",
+          "label": "Where",
+          "kind": "choice",
+          "choices": [
+            "in",
+            "out"
+          ]
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "cell"
+          ],
+          "default": "cell"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select box",
+      "description": "Select atoms inside or outside a box.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "where",
+          "label": "Where",
+          "kind": "choice",
+          "choices": [
+            "in",
+            "out"
+          ]
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "box"
+          ],
+          "default": "box"
+        },
+        {
+          "name": "x1",
+          "label": "x1 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "y1",
+          "label": "y1 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "z1",
+          "label": "z1 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "x2",
+          "label": "x2 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "y2",
+          "label": "y2 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "z2",
+          "label": "z2 (Å, or BOX expression)",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select sphere",
+      "description": "Select atoms inside or outside a sphere.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "where",
+          "label": "Where",
+          "kind": "choice",
+          "choices": [
+            "in",
+            "out"
+          ]
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "sphere"
+          ],
+          "default": "sphere"
+        },
+        {
+          "name": "x",
+          "label": "Center x (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "y",
+          "label": "Center y (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "z",
+          "label": "Center z (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "radius",
+          "label": "Radius R (Å, or BOX expression)",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select cylinder",
+      "description": "Select atoms inside or outside a cylinder.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "where",
+          "label": "Where",
+          "kind": "choice",
+          "choices": [
+            "in",
+            "out"
+          ]
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "cylinder"
+          ],
+          "default": "cylinder"
+        },
+        {
+          "name": "axis",
+          "label": "Cylinder axis",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "c1",
+          "label": "Center coordinate 1 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "c2",
+          "label": "Center coordinate 2 (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "radius",
+          "label": "Radius R (Å, or BOX expression)",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select cone",
+      "description": "Select atoms inside or outside a cone.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "where",
+          "label": "Where",
+          "kind": "choice",
+          "choices": [
+            "in",
+            "out"
+          ]
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "cone"
+          ],
+          "default": "cone"
+        },
+        {
+          "name": "axis",
+          "label": "Cone axis",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "x",
+          "label": "Apex x (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "y",
+          "label": "Apex y (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "z",
+          "label": "Apex z (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "alpha",
+          "label": "Half-angle α (degrees)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select torus",
+      "description": "Select atoms inside or outside a torus.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "where",
+          "label": "Where",
+          "kind": "choice",
+          "choices": [
+            "in",
+            "out"
+          ]
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "torus"
+          ],
+          "default": "torus"
+        },
+        {
+          "name": "axis",
+          "label": "Torus axis",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "x",
+          "label": "Center x (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "y",
+          "label": "Center y (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "z",
+          "label": "Center z (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "major_radius",
+          "label": "Major radius R (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "minor_radius",
+          "label": "Minor radius r (Å, or BOX expression)",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select by property",
+      "description": "Select atoms whose property has a value or lies in a range value1:value2.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "prop"
+          ],
+          "default": "prop"
+        },
+        {
+          "name": "property",
+          "label": "Property name",
+          "kind": "string"
+        },
+        {
+          "name": "value",
+          "label": "Value or range value1:value2",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select neighbors",
+      "description": "Select the N nearest neighbors of an atom.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "count",
+          "label": "Number of neighbors NNN",
+          "kind": "int"
+        },
+        {
+          "name": "species",
+          "label": "Species",
+          "kind": "species"
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "neighbors"
+          ],
+          "default": "neighbors"
+        },
+        {
+          "name": "index",
+          "label": "Atom index",
+          "kind": "int"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select by grid file",
+      "description": "Select atoms using a grid file.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "grid"
+          ],
+          "default": "grid"
+        },
+        {
+          "name": "file",
+          "label": "Grid file",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select by STL file",
+      "description": "Select atoms inside a STL surface.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "stl"
+          ],
+          "default": "stl"
+        },
+        {
+          "name": "center",
+          "label": "Center",
+          "kind": "choice",
+          "choices": [
+            "center"
+          ],
+          "optional": true
+        },
+        {
+          "name": "scale",
+          "label": "Scaling",
+          "kind": "choice",
+          "choices": [
+            "rescale",
+            "fill"
+          ],
+          "optional": true
+        },
+        {
+          "name": "file",
+          "label": "STL file",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-select",
+      "label": "Select modulo",
+      "description": "Select atoms whose index i satisfies i modulo j.",
+      "args": [
+        {
+          "name": "mode",
+          "label": "Combine with previous selection",
+          "kind": "choice",
+          "choices": [
+            "add",
+            "rm",
+            "intersect",
+            "xor",
+            "among"
+          ],
+          "optional": true
+        },
+        {
+          "name": "i",
+          "label": "i",
+          "kind": "int"
+        },
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "modulo"
+          ],
+          "default": "modulo"
+        },
+        {
+          "name": "j",
+          "label": "j",
+          "kind": "int"
+        }
+      ]
+    },
+    {
+      "flag": "-separate",
+      "label": "Separate",
+      "description": "Pull apart atoms closer than a distance.",
+      "args": [
+        {
+          "name": "distance",
+          "label": "Distance (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "shift",
+          "label": "Shift (Å)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-shift",
+      "label": "Shift",
+      "description": "Translate all atoms by a vector.",
+      "args": [
+        {
+          "name": "tx",
+          "label": "τX (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "ty",
+          "label": "τY (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "tz",
+          "label": "τZ (Å, or BOX expression)",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-shift",
+      "label": "Shift above/below plane",
+      "description": "Translate atoms above or below a plane.",
+      "args": [
+        {
+          "name": "side",
+          "label": "Side",
+          "kind": "choice",
+          "choices": [
+            "above",
+            "below"
+          ]
+        },
+        {
+          "name": "d",
+          "label": "Distance d (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "normal",
+          "label": "Normal direction (x, y, z or Miller [hkl])",
+          "kind": "string",
+          "default": "z"
+        },
+        {
+          "name": "tx",
+          "label": "τX (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "ty",
+          "label": "τY (Å, or BOX expression)",
+          "kind": "string"
+        },
+        {
+          "name": "tz",
+          "label": "τZ (Å, or BOX expression)",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-sort",
+      "label": "Sort by property",
+      "description": "Sort atoms by a property.",
+      "args": [
+        {
+          "name": "property",
+          "label": "Property (species, x, y, z or auxiliary)",
+          "kind": "string",
+          "default": "species"
+        },
+        {
+          "name": "order",
+          "label": "Order",
+          "kind": "choice",
+          "choices": [
+            "up",
+            "down",
+            "pack",
+            "reverse"
+          ]
+        }
+      ]
+    },
+    {
+      "flag": "-sort",
+      "label": "Sort randomly",
+      "description": "Shuffle the atom list.",
+      "args": [
+        {
+          "name": "keyword",
+          "label": "Keyword",
+          "kind": "choice",
+          "choices": [
+            "random"
+          ],
+          "default": "random"
+        }
+      ]
+    },
+    {
+      "flag": "-spacegroup",
+      "label": "Space group",
+      "description": "Apply the symmetry operations of a space group.",
+      "args": [
+        {
+          "name": "group",
+          "label": "Number or Hermann-Mauguin symbol",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-stress",
+      "label": "Stress",
+      "description": "Deform elastically under an applied stress (needs elastic tensor).",
+      "args": [
+        {
+          "name": "component",
+          "label": "Component",
+          "kind": "choice",
+          "choices": [
+            "xx",
+            "yy",
+            "zz",
+            "yx",
+            "zx",
+            "zy",
+            "p"
+          ]
+        },
+        {
+          "name": "stress",
+          "label": "Stress σ (GPa); p = pressure",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-stress",
+      "label": "Stress from file",
+      "description": "Apply a stress tensor read from a file.",
+      "args": [
+        {
+          "name": "file",
+          "label": "Stress file",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-substitute",
+      "label": "Substitute",
+      "description": "Replace one species by another.",
+      "args": [
+        {
+          "name": "sp1",
+          "label": "Species to replace",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "New species",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "flag": "-swap",
+      "label": "Swap atoms",
+      "description": "Swap two atoms by index.",
+      "args": [
+        {
+          "name": "id1",
+          "label": "Atom index 1",
+          "kind": "int"
+        },
+        {
+          "name": "id2",
+          "label": "Atom index 2",
+          "kind": "int"
+        }
+      ]
+    },
+    {
+      "flag": "-swap",
+      "label": "Swap species",
+      "description": "Swap two species.",
+      "args": [
+        {
+          "name": "sp1",
+          "label": "Species 1",
+          "kind": "species"
+        },
+        {
+          "name": "sp2",
+          "label": "Species 2",
+          "kind": "species"
+        }
+      ]
+    },
+    {
+      "flag": "-swap",
+      "label": "Swap axes",
+      "description": "Swap two Cartesian coordinates.",
+      "args": [
+        {
+          "name": "axis1",
+          "label": "Axis 1",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "axis2",
+          "label": "Axis 2",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        }
+      ]
+    },
+    {
+      "flag": "-swap",
+      "label": "Swap properties",
+      "description": "Swap two auxiliary properties.",
+      "args": [
+        {
+          "name": "prop1",
+          "label": "Property 1",
+          "kind": "string"
+        },
+        {
+          "name": "prop2",
+          "label": "Property 2",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-torsion",
+      "label": "Torsion",
+      "description": "Apply torsion around a Cartesian axis.",
+      "args": [
+        {
+          "name": "axis",
+          "label": "Axis",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "angle",
+          "label": "Angle θ (degrees)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-unit",
+      "label": "Scale property",
+      "description": "Multiply a property by a factor.",
+      "args": [
+        {
+          "name": "property",
+          "label": "Property (X, Y, Z, vx, fx, ...)",
+          "kind": "string"
+        },
+        {
+          "name": "factor",
+          "label": "Factor",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-unit",
+      "label": "Convert units",
+      "description": "Convert coordinates or velocities between unit systems.",
+      "args": [
+        {
+          "name": "unit1",
+          "label": "From unit (e.g. A, nm, Bohr, A/ps)",
+          "kind": "string"
+        },
+        {
+          "name": "unit2",
+          "label": "To unit",
+          "kind": "string"
+        }
+      ]
+    },
+    {
+      "flag": "-unskew",
+      "label": "Unskew",
+      "description": "Reduce box tilt by adding or subtracting box vectors.",
+      "args": []
+    },
+    {
+      "flag": "-velocity",
+      "label": "Velocity",
+      "description": "Assign Maxwell-Boltzmann velocities at temperature T.",
+      "args": [
+        {
+          "name": "temperature",
+          "label": "Temperature T (K)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "flag": "-wrap",
+      "label": "Wrap",
+      "description": "Put atoms back in the box using periodic boundary conditions.",
+      "args": []
+    }
+  ],
+  "formats": [
+    {
+      "id": "cfg",
+      "label": "CFG (AtomEye / QSTEM)",
+      "extensions": [
+        "cfg"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "dd",
+      "label": "DD (ddplot)",
+      "extensions": [
+        "dd"
+      ],
+      "read": false,
+      "write": false
+    },
+    {
+      "id": "vesta",
+      "label": "VESTA",
+      "extensions": [
+        "vesta"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "xsf",
+      "label": "XSF (XCrySDen)",
+      "extensions": [
+        "xsf"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "abinit",
+      "label": "ABINIT",
+      "extensions": [
+        "in"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "coorat",
+      "label": "COORAT (MBPP)",
+      "extensions": [
+        "coorat",
+        "COORAT"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "crystal",
+      "label": "CRYSTAL",
+      "extensions": [
+        "d12"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "pos",
+      "label": "POSCAR (VASP)",
+      "extensions": [
+        "POSCAR"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "outcar",
+      "label": "OUTCAR (VASP, one-in-all mode only)",
+      "extensions": [
+        "OUTCAR"
+      ],
+      "read": true,
+      "write": false
+    },
+    {
+      "id": "pw",
+      "label": "Quantum Espresso input (pw)",
+      "extensions": [
+        "pw"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "out",
+      "label": "Quantum Espresso output (one-in-all mode only)",
+      "extensions": [
+        "out"
+      ],
+      "read": true,
+      "write": false
+    },
+    {
+      "id": "fdf",
+      "label": "SIESTA fdf",
+      "extensions": [
+        "fdf"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "xv",
+      "label": "SIESTA xv",
+      "extensions": [
+        "xv"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "bop",
+      "label": "BOP",
+      "extensions": [
+        "bop"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "bx",
+      "label": "BOPfox",
+      "extensions": [
+        "bx"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "dlp",
+      "label": "DL_POLY CONFIG",
+      "extensions": [
+        "CONFIG"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "gin",
+      "label": "GULP",
+      "extensions": [
+        "gin",
+        "grs",
+        "res"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "imd",
+      "label": "IMD",
+      "extensions": [
+        "imd"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "lmc",
+      "label": "LAMMPS custom dump",
+      "extensions": [
+        "lmc"
+      ],
+      "read": true,
+      "write": false
+    },
+    {
+      "id": "lmp",
+      "label": "LAMMPS data",
+      "extensions": [
+        "lmp",
+        "data"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "mol",
+      "label": "MOLDY",
+      "extensions": [
+        "mol"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "xmd",
+      "label": "XMD",
+      "extensions": [
+        "xmd"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "cel",
+      "label": "Dr Probe (cel)",
+      "extensions": [
+        "cel"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "jems",
+      "label": "JEMS",
+      "extensions": [
+        "txt"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "atsk",
+      "label": "Atomsk binary",
+      "extensions": [
+        "atsk"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "cif",
+      "label": "CIF",
+      "extensions": [
+        "cif"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "csv",
+      "label": "CSV",
+      "extensions": [
+        "csv"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "dat",
+      "label": "Columns of data (dat)",
+      "extensions": [
+        "dat"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "pdb",
+      "label": "PDB",
+      "extensions": [
+        "pdb"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "str",
+      "label": "PDFFIT structure (str)",
+      "extensions": [
+        "str",
+        "stru"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "xyz",
+      "label": "XYZ",
+      "extensions": [
+        "xyz"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "exyz",
+      "label": "Extended XYZ",
+      "extensions": [
+        "xyz"
+      ],
+      "read": true,
+      "write": true
+    },
+    {
+      "id": "sxyz",
+      "label": "XYZ with shells",
+      "extensions": [
+        "xyz"
+      ],
+      "read": true,
+      "write": true
+    }
+  ]
+}
