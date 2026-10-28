@@ -14,14 +14,18 @@
       font: 14px system-ui, sans-serif;
     }
     [hidden] { display: none !important; }
+    * { box-sizing: border-box; }
     body { margin: 0; background: Canvas; color: CanvasText; display: flex; flex-direction: column; height: 100vh; }
     #tabs { display: flex; gap: 2px; padding: 4px 4px 0; border-bottom: 1px solid var(--border); overflow-x: auto; flex-shrink: 0; }
-    .tab { display: flex; align-items: center; gap: 6px; padding: 6px 4px 6px 12px; border-radius: 6px 6px 0 0; cursor: default; white-space: nowrap; }
+    /* Tabs keep their width; the strip scrolls instead of squashing them. */
+    .tab { display: flex; align-items: center; gap: 6px; padding: 6px 4px 6px 12px; border-radius: 6px 6px 0 0; cursor: default; white-space: nowrap; flex: 0 0 auto; }
     .tab.current { box-shadow: inset 0 -2px var(--accent); font-weight: 600; }
     .tab .close { border: none; background: none; padding: 0 6px; font-size: 16px; }
-    #pages { flex: 1; overflow: auto; }
+    /* min-height lets the page area shrink and scroll when the window gets shorter. */
+    #pages { flex: 1; min-height: 0; overflow: auto; }
     .page[inert] { opacity: 0.6; cursor: progress; }
-    .page { display: flex; flex-direction: column; gap: 16px; padding: 12px; max-width: 900px; }
+    /* Fills the window up to a readable width, then stays centred instead of hugging the left edge. */
+    .page { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 900px; margin: 0 auto; padding: 12px; }
     section { display: flex; flex-direction: column; gap: 6px; }
     h2 { font-size: 1em; margin: 0; }
     .editing { margin: 0; user-select: text; }
@@ -32,6 +36,13 @@
     .param > span:first-child { flex: 0 0 22ch; }
     .param > input, .param > textarea, .param > .dropdown, .dropdown > input { flex: 1; min-width: 0; }
     .param > textarea { font: inherit; padding: 4px 8px; resize: vertical; }
+    /* Pick buttons keep their label; the field next to them takes the remaining width. */
+    .param > button { flex: 0 0 auto; }
+    /* Narrow windows: put the label above its field so the field keeps a usable width. */
+    @media (max-width: 560px) {
+      .param { flex-wrap: wrap; }
+      .param > span:first-child { flex: 1 1 100%; }
+    }
     .dropdown { display: flex; position: relative; }
     .dropdown.open { z-index: 10; }
     .dropdown-list {
@@ -54,13 +65,14 @@
     .option-header { display: flex; gap: 8px; }
     .option-header > .dropdown { flex: 1; }
     input, button { font: inherit; padding: 4px 8px; }
+    button { white-space: nowrap; }
     section > button { align-self: flex-start; }
-    .save-buttons { display: flex; gap: 8px; justify-content: flex-end; }
+    .save-buttons { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
     button.suggested { background: var(--accent); color: white; border: 1px solid var(--accent); border-radius: 4px; }
     details { display: flex; flex-direction: column; gap: 6px; }
     details > button { float: right; }
     .log {
-      clear: both; margin: 6px 0 0; padding: 8px; min-height: 160px; max-height: 400px; overflow: auto;
+      clear: both; margin: 6px 0 0; padding: 8px; min-height: 160px; max-height: min(400px, 40vh); overflow: auto;
       white-space: pre-wrap; user-select: text;
       /* Mixing toward the text color darkens the log in light themes and lightens it in dark ones. */
       background: color-mix(in srgb, Canvas, CanvasText 7%);
