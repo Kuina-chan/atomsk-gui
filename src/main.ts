@@ -42,8 +42,11 @@ async function choose(message: string, detail: string, buttons: string[]): Promi
   return response;
 }
 
-function fileFilters(forReading: boolean): Electron.FileFilter[] {
-  const formats = catalog.formats.filter((format) => (forReading ? format.read : format.write));
+/** Formats a dialog may show; `onlyExtension` narrows it to a mode's forced output format (ddplot). */
+function fileFilters(forReading: boolean, onlyExtension?: string): Electron.FileFilter[] {
+  const formats = onlyExtension
+    ? catalog.formats.filter((format) => format.extensions.some((extension) => extension.toLowerCase() === onlyExtension.toLowerCase()))
+    : catalog.formats.filter((format) => (forReading ? format.read : format.write));
   // Uppercase entries are bare filenames (POSCAR, CONFIG, OUTCAR), which Electron filters cannot match: use "All files".
   const extensionsOf = (format: Format) => format.extensions.filter((extension) => !/^[A-Z]+$/.test(extension));
   return [
@@ -137,21 +140,33 @@ async function showAtomskLocation(): Promise<void> {
 
 /** Asks for a destination when there is no known one, runs atomsk and reports failures in a dialog. */
 async function save({ source, options, knownPath }: SaveRequest): Promise<SaveResult | undefined> {
+  const output = command.outputKind(source);
   let destination = knownPath;
-  if (!destination) {
-    const { canceled, filePath } = await dialog.showSaveDialog(window, { title: 'Save structure as', filters: fileFilters(false) });
+  if (!destination && output === 'folder') {
+    const { canceled, filePaths } = await dialog.showOpenDialog(window, {
+      title: 'Choose the output folder', properties: ['openDirectory', 'createDirectory'],
+    });
+    if (canceled || filePaths.length === 0) return undefined;
+    destination = filePaths[0];
+  } else if (!destination && output !== 'none') {
+    const mode = source.kind === 'mode' ? command.modeById(source.mode) : undefined;
+    const { canceled, filePath } = await dialog.showSaveDialog(window, {
+      title: output === 'prefix' || output === 'numbered' ? 'Choose the output name; snapshots get a number' : 'Save structure as',
+      filters: fileFilters(false, mode?.outputExtension),
+    });
     if (canceled || !filePath) return undefined;
     destination = filePath;
   }
+  destination ??= process.cwd();
   let program = command.locateAtomsk();
   if (!program && await offerAtomsk('atomsk was not found.', MISSING_DETAIL)) program = command.locateAtomsk();
   if (!program) return undefined;
 
   const { success, log } = await command.writeStructure(program, source, options, destination);
-  if (success) return { log, savedTo: destination };
+  if (success) return { log, savedTo: output === 'none' ? undefined : destination, output };
   // Not awaited: the renderer shows the log while the dialog is open.
   void showError('Atomsk failed', lastLines(log), log);
-  return { log };
+  return { log, output };
 }
 
 // ---------------------------------------------------------------- window
@@ -281,6 +296,14 @@ function startGui(): void {
     return files;
   });
   ipcMain.handle('save', (_event, request: SaveRequest) => save(request));
+  ipcMain.handle('pick-files', async (_event, multiple: boolean) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog(window, {
+      title: 'Choose a structure file',
+      properties: multiple ? ['openFile', 'multiSelections'] : ['openFile'],
+      filters: fileFilters(true),
+    });
+    return canceled ? [] : filePaths;
+  });
   ipcMain.handle('show-error', (_event, message: string, detail: string) => showError(message, detail));
   ipcMain.handle('confirm', (_event, message: string, detail: string, acceptLabel: string) => confirm(message, detail, acceptLabel));
   ipcMain.on('set-dirty', (_event, dirty: boolean) => { anyDirty = dirty; });

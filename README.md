@@ -10,7 +10,7 @@ Atomsk GUI is an Electron app written in TypeScript (`src/`, compiled with `tsc`
 no bundler). It runs on Linux, Windows and macOS (Apple silicon / M-series only; there is no Intel
 macOS build).
 
-The project is at version **0.1.0** and is developed by **Kuina-chan**.
+The project is at version **0.2.0** and is developed by **Kuina-chan**.
 Homepage: https://github.com/Kuina-chan/atomsk-gui
 
 ## What this program is used for
@@ -22,19 +22,48 @@ Atomsk GUI lets you work with atomic structures without using the command line d
   once the required data has been entered.
 - **Open an existing structure file** in a supported format for modification (skipping the lattice
   selection step).
+- **Run an Atomsk mode** from the `Mode` dropdown: merge, average, gather, list, copy-properties,
+  ddplot, interpolate, match-id, polycrystal, unfold, unwrap, difference, density, rdf,
+  local-symmetry, nye, edm, electronic-polarization and help. Pick the mode, fill in its arguments
+  (file fields have a Browse button; list fields take one path per line), and the options section
+  unlocks once the required fields are filled. `Create from lattice` and `Normal (convert or modify)`
+  stay at the top of the dropdown for lattice creation and plain conversion.
 - **Save** a structure back to its file, or **Save as…** to a new path or format (this is also how
   you convert between formats).
 - The main screen offers `Save` and `Save as…` buttons, equivalent to the File menu entries
-  `Save structure` (Ctrl-S) and `Save structure as…` (Ctrl-Shift-S).
+  `Save structure` (Ctrl-S) and `Save structure as…` (Ctrl-Shift-S). For a mode that writes no file
+  the button reads `Run` instead.
 - Menu bar entries: **File** (New structure Ctrl-N, Open Ctrl-O, Save structure Ctrl-S, Save
   structure as… Ctrl-Shift-S, Exit), **View** (Theme: System/Light/Dark) and **About**
   (About atomsk, About atomsk-gui).
 - **Atomsk control (MCP):** `atomsk-gui --mcp` runs a Model Context Protocol server over stdio with
   no window, so AI agents can drive Atomsk through the same catalog and argument building as the GUI
-  (`list_lattices`, `list_options`, `list_formats`, `create_structure`, `transform_file`).
+  (`list_lattices`, `list_options`, `list_formats`, `list_modes`, `create_structure`,
+  `transform_file`, `run_mode`).
 
 Full documentation for the Atomsk commands used between the back end and the front end is at
 https://atomsk.univ-lille.fr/doc/en/index.html.
+
+### Atomsk modes
+
+The `Mode` dropdown contains every mode documented at
+https://atomsk.univ-lille.fr/doc/en/modes.html except `interactive`. The GUI replaces that mode:
+the window itself is the interactive form. `Create from lattice` (build a structure) and
+`Normal (convert or modify)` (read the opened file, apply options, write the result) are the two
+default entries at the top of the dropdown.
+
+The mode's destination depends on what Atomsk writes, and the catalog records it as `output`:
+
+| Output | Meaning | Modes |
+|--------|---------|-------|
+| `file` | One output file; the extension picked in `Save as…` chooses the format (`ddplot` is always `.dd`) | merge, average, gather, copy-properties, ddplot, match-id, polycrystal, unwrap, local-symmetry, nye |
+| `prefix` | A series of files sharing a prefix, e.g. `<prefix>_img0`, `<prefix>_img1`, … | interpolate |
+| `numbered` | A series of numbered files, e.g. `<prefix>1`, `<prefix>2`, … | unfold |
+| `folder` | Several analysis files, written into a folder chosen with a directory dialog | difference, density, rdf, edm, electronic-polarization |
+| `none` | No output file; `list` converts next to each input and `help` prints to the log | list, help |
+
+`density`, `rdf`, `local-symmetry`, `nye` and `edm` automatically receive `-wrap`. Atomsk would
+otherwise ask on stdin whether to wrap coordinates, and a GUI run cannot answer that prompt.
 
 ## How to build from source
 

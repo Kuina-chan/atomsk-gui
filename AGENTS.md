@@ -10,7 +10,20 @@ The program always open to main screen to have the user input fields. The first 
 
 If the user decide to load a pre-made file for the program to use, skip the lattice crystal selection and open all the options
 
+Below the lattice/file area the main screen has a `Mode` dropdown. It holds every documented Atomsk mode except `interactive` (the GUI is the interactive form), plus two synthetic entries at the top: `Create from lattice` and `Normal (convert or modify)`. Choosing a mode shows its arguments; the options section unlocks once the required arguments are filled. A mode that writes no file replaces the `Save` button with `Run`.
+
 The main screen has `Save` and `Save as…` buttons at the bottom, equivalent to the File menu entries `Save structure` and `Save structure as…`.
+
+## About the modes
+The mode definitions live in `modes` in `catalog.json` (id, flag, label, description, args, output). `args` reuse the option-parameter shape (`file`, `files` and `list` for paths; `list` fields are one path per line and are materialized into a temporary list file). `output` is one of:
+
+- `file`: one output file; the chosen extension picks the format. `outputExtension` forces one format (`ddplot` → `.dd`).
+- `prefix`: a series of files under the chosen prefix (`interpolate` → `<prefix>_img0`, `<prefix>_img1`, …).
+- `numbered`: a series of numbered files. Atomsk 0.13.1 `--unfold` writes `<outputfile><n><ext>`, so the app renames them to `<prefix><n><ext>`.
+- `folder`: several analysis files written into a folder chosen with a directory dialog (`difference`, `density`, `rdf`, `edm`, `electronic-polarization`).
+- `none`: no output file (`list` converts next to each input, `help` prints to the log).
+
+Modes that check wrapped coordinates (`density`, `rdf`, `local-symmetry`, `nye`, `edm`) list `-wrap` in `autoOptions`; without it Atomsk prompts on stdin and the captured run fails. Atomsk's merge mode rejects absolute output paths and gather rejects absolute paths inside a list file, so the app runs in the destination/output directory and passes basenames or relative paths.
 
 The menu bar now only contain the `File`, `View` and `About` Button:
 
@@ -45,4 +58,4 @@ The macOS build targets Apple silicon only (arm64; there is no Intel build). `np
 All of the atomsk documentation is available at the entry point `https://atomsk.univ-lille.fr/doc/en/index.html`. Strictly follow this documentation for the command needed between the backend and the frontend
 
 ## Agent control (MCP)
-`atomsk-gui --mcp` runs a Model Context Protocol server over stdio (newline-delimited JSON-RPC) with no window: it reruns itself as plain Node (`ELECTRON_RUN_AS_NODE`), so it also works without a display, and AI agents can drive atomsk through the same catalog and argument building as the GUI. Tools: `list_lattices`, `list_options` (optional `query` filter), `list_formats`, `create_structure` (lattice, params, optional orient/options, output) and `transform_file` (input, optional options, output; converting a format is a transform with no options and a different output extension). Calls are validated against the catalog, and an existing output file is never overwritten unless `overwrite` is true. Register it with `claude mcp add atomsk -- atomsk-gui --mcp`.
+`atomsk-gui --mcp` runs a Model Context Protocol server over stdio (newline-delimited JSON-RPC) with no window: it reruns itself as plain Node (`ELECTRON_RUN_AS_NODE`), so it also works without a display, and AI agents can drive atomsk through the same catalog and argument building as the GUI. Tools: `list_lattices`, `list_options` (optional `query` filter), `list_formats`, `list_modes`, `create_structure` (lattice, params, optional orient/options, output), `transform_file` (input, optional options, output; converting a format is a transform with no options and a different output extension) and `run_mode` (mode, named `args`, optional options, output; `files`/`list` arguments are arrays of paths). Calls are validated against the catalog, and an existing output file is never overwritten unless `overwrite` is true; for `prefix`/`numbered` modes the check also covers the generated snapshot files. Register it with `claude mcp add atomsk -- atomsk-gui --mcp`.

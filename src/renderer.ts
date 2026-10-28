@@ -186,7 +186,13 @@ function searchableDropdown(labels: string[], onSelect: (index: number) => void,
     close();
     showSelected();
   });
-  return { root, input };
+  /** Picks an entry from code, e.g. after a mode saved its file and the tab becomes normal. */
+  const select = (index: number, notify = false) => {
+    selected = index;
+    showSelected();
+    if (notify) onSelect(index);
+  };
+  return { root, input, select };
 }
 
 function descriptionLabel(text = ''): HTMLParagraphElement {
@@ -202,18 +208,29 @@ function setDescription(label: HTMLElement, input: HTMLInputElement, text: strin
 
 // ------------------------------------------------------------ parameters
 
-/** One input (with its label) for a lattice or option parameter. */
+/** One input (with its label) for a lattice, mode or option parameter. */
 interface ParamField {
   param: Param;
   row: HTMLElement;
   value(): string;
+  /** Paths of a `files` or `list` field; one entry for every other kind. */
+  values(): string[];
+  filled(): boolean;
 }
 
 function isFilled(field: ParamField): boolean {
-  return Boolean(field.param.optional) || field.value() !== '';
+  return field.filled();
 }
 
 const PLACEHOLDERS: Partial<Record<ParamKind, string>> = { float: 'number', int: 'integer', species: 'element symbol' };
+
+/** A file picker button that adds paths to `add`. */
+function pickButton(text: string, update: (files: string[]) => void, multiple = false): HTMLButtonElement {
+  return element('button', { textContent: text, type: 'button', onclick: async () => {
+    const files = await api.pickFiles(multiple);
+    if (files.length > 0) update(files);
+  } });
+}
 
 function paramField(param: Param, onChange: () => void): ParamField {
   const row = element('label', { className: 'param' }, element('span', { textContent: param.optional ? `${param.label} (optional)` : param.label }));
@@ -221,7 +238,7 @@ function paramField(param: Param, onChange: () => void): ParamField {
   // A single-choice parameter is a fixed keyword: shown read-only, always emitted.
   if (param.kind === 'choice' && !param.optional && choices.length === 1) {
     row.append(element('span', { className: 'description', textContent: choices[0] }));
-    return { param, row, value: () => choices[0] };
+    return { param, row, value: () => choices[0], values: () => [choices[0]], filled: () => true };
   }
   if (param.kind === 'choice') {
     const values = param.optional ? ['', ...choices] : choices;
@@ -232,12 +249,54 @@ function paramField(param: Param, onChange: () => void): ParamField {
     }, selected);
     dropdown.input.title = param.label;
     row.append(dropdown.root);
-    return { param, row, value: () => values[selected] };
+    return {
+      param, row,
+      value: () => values[selected],
+      values: () => [values[selected]],
+      filled: () => Boolean(param.optional) || values[selected] !== '',
+    };
+  }
+  if (param.kind === 'file') {
+    const input = element('input', { placeholder: 'path to a file', title: param.label, value: param.default ?? '' });
+    input.addEventListener('input', onChange);
+    row.append(input, pickButton('Browse…', (files) => {
+      input.value = files[0];
+      onChange();
+    }));
+    return {
+      param, row,
+      value: () => input.value.trim(),
+      values: () => [input.value.trim()],
+      filled: () => Boolean(param.optional) || input.value.trim() !== '',
+    };
+  }
+  if (param.kind === 'files' || param.kind === 'list') {
+    const textarea = element('textarea', {
+      rows: 3, title: param.label,
+      placeholder: param.kind === 'files' ? 'One file path per line' : 'One file path per line; Atomsk receives a list file',
+    });
+    textarea.addEventListener('input', onChange);
+    const lines = () => textarea.value.split('\n').map((line) => line.trim()).filter((line) => line !== '');
+    row.append(textarea, pickButton('Add files…', (files) => {
+      textarea.value = [...lines(), ...files].join('\n');
+      onChange();
+    }, true));
+    return {
+      param, row,
+      value: () => lines().join('\n'),
+      values: lines,
+      filled: () => Boolean(param.optional) || lines().length >= (param.min ?? 1),
+    };
   }
   const input = element('input', { placeholder: PLACEHOLDERS[param.kind] ?? 'text', title: param.label, value: param.default ?? '' });
   input.addEventListener('input', onChange);
   row.append(input);
-  return { param, row, value: () => input.value.trim() };
+  return {
+    param, row,
+    value: () => input.value.trim(),
+    values: () => [input.value.trim()],
+    filled: () => Boolean(param.optional) || input.value.trim() !== '',
+  };
 }
 
 /** Replaces the content of `container` with one field per parameter. */
@@ -249,7 +308,7 @@ function fillParams(container: HTMLElement, params: Param[], onChange: () => voi
 
 /** Optional `orient` directions of `--create`; they are not part of the catalog. */
 const ORIENTATION_PARAMS: Param[] = ['X', 'Y', 'Z'].map((axis) => ({
-  label: `Orientation along ${axis} (e.g. [100])`, kind: 'string', optional: true,
+  name: axis.toLowerCase(), label: `Orientation along ${axis} (e.g. [100])`, kind: 'string', optional: true,
 }));
 
 // ------------------------------------------------------------------- tab
@@ -261,6 +320,27 @@ interface OptionRow {
   /** Catalog index of the option `fields` were built for. */
   optionIndex?: number;
 }
+
+/** An entry of the mode dropdown: Atomsk's documented modes plus the two default sources. */
+interface ModeChoice {
+  id: string;
+  label: string;
+  description: string;
+  args: Param[];
+  output: ModeOutput;
+}
+
+const CREATE_MODE: ModeChoice = {
+  id: 'create', label: 'Create from lattice',
+  description: 'Build a new crystal from a lattice type and its parameters.',
+  args: [], output: 'file',
+};
+
+const NORMAL_MODE: ModeChoice = {
+  id: 'normal', label: 'Normal (convert or modify)',
+  description: 'Read the opened file, apply options and write the result. The output extension chooses the format.',
+  args: [], output: 'file',
+};
 
 /** One structure being edited. */
 class Tab {
@@ -274,12 +354,21 @@ class Tab {
   /** Tab header text: the file the tab saves to, once there is one. */
   private readonly title = element('span');
   private readonly editingLabel = element('p', { className: 'editing' });
+  private readonly modeChoices: ModeChoice[];
+  private readonly modeDropdown: ReturnType<typeof searchableDropdown>;
+  private readonly modeDescription = descriptionLabel();
+  private readonly modeParams = element('div', { className: 'params', hidden: true });
+  private modeFields: ParamField[] = [];
+  private modeIndex = 0;
   private latticeFields: ParamField[] = [];
   private latticeIndex?: number;
   private readonly orientFields: ParamField[];
+  private readonly latticeSection: HTMLElement;
   private readonly optionsSection = element('section', {}, element('h2', { textContent: 'Options' }));
   private readonly optionsList = element('div', { className: 'options' });
   private optionRows: OptionRow[] = [];
+  private readonly saveAsButton: HTMLButtonElement;
+  private readonly saveButton: HTMLButtonElement;
   private readonly logDetails = element('details', {}, element('summary', { textContent: 'Log' }));
   private readonly logView = element('pre', { className: 'log' });
   /** Enabled by the first log line. */
@@ -294,6 +383,15 @@ class Tab {
 
     const onChange = () => this.changed();
     const catalog = workspace.catalog;
+    this.modeChoices = [CREATE_MODE, NORMAL_MODE, ...catalog.modes];
+    const defaultMode = sourcePath ? 1 : 0;
+    this.modeIndex = defaultMode;
+    // Normal mode is replaced by the lattice form only while creating; the options follow whichever mode is ready.
+    this.modeDropdown = searchableDropdown(this.modeChoices.map((choice) => choice.label), (index) => {
+      this.applyMode(index);
+      this.changed();
+    }, defaultMode);
+
     const latticeDescription = descriptionLabel();
     const latticeParams = element('div', { className: 'params' });
     const orientBox = element('div', { className: 'params', hidden: true });
@@ -306,22 +404,23 @@ class Tab {
       orientBox.hidden = false;
       this.changed();
     });
-    const latticeSection = element('section', { hidden: Boolean(sourcePath) },
+    this.latticeSection = element('section', {},
       element('h2', { textContent: 'Crystal lattice' }), latticeDropdown.root, latticeDescription, latticeParams, orientBox);
 
-    // A new structure reveals the options only once the lattice parameters are filled in.
-    this.optionsSection.hidden = !sourcePath;
     this.optionsSection.append(this.optionsList, element('button', { textContent: 'Add option', onclick: () => this.addOptionRow() }));
 
-    // Same actions as the File menu entries.
-    const saveButtons = element('div', { className: 'save-buttons' },
-      element('button', { textContent: 'Save as…', onclick: () => void this.save(true) }),
-      element('button', { textContent: 'Save', className: 'suggested', onclick: () => void this.save(false) }));
+    // Same actions as the File menu entries; modes that write no file run instead of save.
+    this.saveAsButton = element('button', { textContent: 'Save as…', onclick: () => void this.save(true) });
+    this.saveButton = element('button', { textContent: 'Save', className: 'suggested', onclick: () => void this.save(false) });
+    const saveButtons = element('div', { className: 'save-buttons' }, this.saveAsButton, this.saveButton);
 
     this.logDetails.append(this.copyLogButton, this.logView);
 
+    this.applyMode(defaultMode);
     this.page = element('div', { className: 'page' },
-      this.editingLabel, latticeSection, this.optionsSection, saveButtons, this.logDetails);
+      this.editingLabel, this.latticeSection,
+      element('section', {}, element('h2', { textContent: 'Mode' }), this.modeDropdown.root, this.modeDescription, this.modeParams),
+      this.optionsSection, saveButtons, this.logDetails);
     this.title.textContent = title;
     this.header = element('div', { className: 'tab', onclick: () => workspace.select(this) },
       this.title,
@@ -331,12 +430,44 @@ class Tab {
       } }));
   }
 
+  /** Builds the arguments of the selected mode and updates what the form shows. */
+  private applyMode(index: number): void {
+    this.modeIndex = index;
+    const choice = this.modeChoices[index];
+    this.modeFields = fillParams(this.modeParams, choice.args, () => this.changed());
+    setDescription(this.modeDescription, this.modeDropdown.input, choice.description);
+    this.latticeSection.hidden = choice.id !== 'create';
+    this.modeParams.hidden = choice.id === 'create' || choice.id === 'normal';
+    // A mode that only prints or writes files next to its inputs has nothing to ask for; its button runs it.
+    this.saveAsButton.hidden = choice.output === 'none';
+    this.saveButton.textContent = choice.output === 'none' ? 'Run' : 'Save';
+    this.updateOptionsVisibility();
+  }
+
+  private modeReady(): boolean {
+    const choice = this.modeChoices[this.modeIndex];
+    if (choice.id === 'create') return this.latticeIndex !== undefined && this.latticeFields.every(isFilled);
+    if (choice.id === 'normal') return Boolean(this.sourcePath);
+    return this.modeFields.every(isFilled);
+  }
+
+  private updateOptionsVisibility(): void {
+    this.optionsSection.hidden = !this.modeReady();
+  }
+
   /** Called by every input: marks the tab modified and re-checks the form. */
   private changed(): void {
     this.dirty = true;
     this.workspace.reportDirty();
-    const latticeReady = this.latticeIndex !== undefined && this.latticeFields.every(isFilled);
-    this.optionsSection.hidden = !(this.sourcePath || latticeReady);
+    this.updateOptionsVisibility();
+  }
+
+  /** Switches the dropdown without marking the tab dirty (used after a mode saved its output). */
+  private selectMode(id: string): void {
+    const index = this.modeChoices.findIndex((choice) => choice.id === id);
+    if (index < 0) return;
+    this.modeDropdown.select(index);
+    this.applyMode(index);
   }
 
   private addOptionRow(): void {
@@ -364,10 +495,9 @@ class Tab {
 
   /** Reads the form; throws a message for the user. */
   private collect(): { source: Source; options: OptionInvocation[] } {
+    const choice = this.modeChoices[this.modeIndex];
     let source: Source;
-    if (this.sourcePath) {
-      source = { kind: 'file', path: this.sourcePath };
-    } else {
+    if (choice.id === 'create') {
       if (this.latticeIndex === undefined) throw new Error('Choose a crystal lattice first.');
       const missing = this.latticeFields.find((field) => !isFilled(field));
       if (missing) throw new Error(`Fill in "${missing.param.label}".`);
@@ -380,6 +510,32 @@ class Tab {
         parameters: this.latticeFields.map((field) => field.value()),
         orientation: filled === 3 ? orientation : [],
       };
+    } else if (choice.id === 'normal') {
+      if (!this.sourcePath) throw new Error('Open a structure file first, or choose another mode.');
+      source = { kind: 'file', path: this.sourcePath };
+    } else {
+      const values: Record<string, string | string[]> = {};
+      for (const field of this.modeFields) {
+        const param = field.param;
+        if (param.kind === 'files' || param.kind === 'list') {
+          const files = field.values();
+          if (!param.optional && files.length < (param.min ?? 1)) {
+            throw new Error(`Mode ${choice.label}: add at least ${param.min ?? 1} file(s) to "${param.label}".`);
+          }
+          if (files.length > 0) values[param.name] = files;
+        } else {
+          const value = field.value();
+          if (value === '' && !param.optional) throw new Error(`Mode ${choice.label}: fill in "${param.label}".`);
+          if (value !== '') values[param.name] = value;
+        }
+      }
+      if (choice.id === 'density') {
+        const dimension = String(values.dimension ?? '');
+        if ((dimension === '1d' || dimension === '2d') && !values.axis) {
+          throw new Error('Density: choose an axis for a 1d or 2d calculation.');
+        }
+      }
+      source = { kind: 'mode', mode: choice.id, values };
     }
     const options = this.optionRows.map((row) => {
       if (row.optionIndex === undefined) throw new Error('Choose an option for every added option, or remove it.');
@@ -409,7 +565,9 @@ class Tab {
     this.page.inert = true;
     let result;
     try {
-      result = await api.save({ ...collected, knownPath: saveAs ? undefined : this.sourcePath ?? this.savedPath });
+      // Normal mode writes over the opened file; create and every other mode are new outputs.
+      const knownPath = saveAs ? undefined : (collected.source.kind === 'file' ? this.sourcePath : this.savedPath);
+      result = await api.save({ ...collected, knownPath });
     } catch (error) {
       return api.showError('Cannot save', errorText(error));
     } finally {
@@ -417,21 +575,51 @@ class Tab {
     }
     if (!result) return;
     this.appendLog(result.log);
+    const output = result.output ?? 'file';
+    if (output === 'none') {
+      this.dirty = false;
+      this.workspace.reportDirty();
+      this.logDetails.open = true;
+      return;
+    }
     if (!result.savedTo) {
       this.logDetails.open = true;
       return;
     }
-    this.appendLog(`Saved ${result.savedTo}`);
-    this.title.textContent = fileName(result.savedTo);
     this.dirty = false;
     this.workspace.reportDirty();
-    if (this.sourcePath) {
+    if (output === 'folder') {
+      this.appendLog(`Output files written in ${result.savedTo}`);
+      this.savedPath = result.savedTo;
+      return;
+    }
+    if (output === 'prefix' || output === 'numbered') {
+      this.appendLog(`Saved output with prefix ${result.savedTo}`);
+      this.savedPath = result.savedTo;
+      this.title.textContent = fileName(result.savedTo);
+      return;
+    }
+    this.appendLog(`Saved ${result.savedTo}`);
+    this.title.textContent = fileName(result.savedTo);
+    if (collected.source.kind === 'file') {
       // The options are now part of the file; applying them again would double them.
       this.optionRows.forEach((row) => row.container.remove());
       this.optionRows = [];
       this.editingLabel.textContent = `Editing ${result.savedTo}`;
       this.sourcePath = result.savedTo;
+    } else if (collected.source.kind === 'mode') {
+      // The mode produced a new structure: continue editing it in normal mode.
+      this.optionRows.forEach((row) => row.container.remove());
+      this.optionRows = [];
+      this.sourcePath = result.savedTo;
+      this.savedPath = undefined;
+      this.editingLabel.hidden = false;
+      this.editingLabel.textContent = `Editing ${result.savedTo}`;
+      this.selectMode('normal');
     } else {
+      // A created structure is a new file, even when the tab started from an opened one.
+      this.sourcePath = undefined;
+      this.editingLabel.hidden = true;
       this.savedPath = result.savedTo;
     }
   }

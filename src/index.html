@@ -30,7 +30,8 @@
     .options { gap: 12px; }
     .param { display: flex; align-items: center; gap: 8px; }
     .param > span:first-child { flex: 0 0 22ch; }
-    .param > input, .param > .dropdown, .dropdown > input { flex: 1; min-width: 0; }
+    .param > input, .param > textarea, .param > .dropdown, .dropdown > input { flex: 1; min-width: 0; }
+    .param > textarea { font: inherit; padding: 4px 8px; resize: vertical; }
     .dropdown { display: flex; position: relative; }
     .dropdown.open { z-index: 10; }
     .dropdown-list {

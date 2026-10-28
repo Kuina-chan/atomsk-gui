@@ -110,6 +110,11 @@ const TOOL_DEFINITIONS = [
     inputSchema: { type: 'object', properties: {} },
   },
   {
+    name: 'list_modes',
+    description: 'List the atomsk modes (id, flag, label, description, args, output). Normal conversion and lattice creation are the create_structure and transform_file tools; every other documented mode is run with run_mode.',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
     name: 'create_structure',
     description: 'Create an atomic structure from a crystal lattice with atomsk, optionally apply options, and write it to a file. The output extension selects the file format.',
     inputSchema: { type: 'object', properties: {
@@ -131,6 +136,21 @@ const TOOL_DEFINITIONS = [
       overwrite: OVERWRITE_SCHEMA,
     }, required: ['input', 'output'] },
   },
+  {
+    name: 'run_mode',
+    description: 'Run one of the documented atomsk modes other than normal conversion and creation, e.g. merge, average, gather, interpolate, unfold, unwrap, polycrystal, difference, density, rdf, local-symmetry, nye. Call list_modes for parameter names and what output means for each mode.',
+    inputSchema: { type: 'object', properties: {
+      mode: { type: 'string', description: 'Mode id from list_modes, e.g. "merge".' },
+      args: {
+        type: 'object',
+        description: 'Values keyed by parameter name from list_modes. files/list parameters take an array of paths; all others take one string or number.',
+        additionalProperties: { anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'array', items: { type: 'string' } }] },
+      },
+      options: OPTIONS_SCHEMA,
+      output: { type: 'string', description: 'Destination: a file for output "file", a prefix path for "prefix", an existing folder for "folder"; optional for "none".' },
+      overwrite: OVERWRITE_SCHEMA,
+    }, required: ['mode'] },
+  },
 ];
 
 /** Resolves to the tool's text; throws with the error text. */
@@ -140,6 +160,8 @@ async function callTool(name: string, args: Json): Promise<string> {
       return JSON.stringify(catalog.lattices);
     case 'list_formats':
       return JSON.stringify(catalog.formats);
+    case 'list_modes':
+      return JSON.stringify(catalog.modes);
     case 'list_options': {
       const query = typeof args.query === 'string' ? args.query.toLowerCase() : '';
       const matches = catalog.options.filter((option) =>
@@ -173,6 +195,17 @@ async function callTool(name: string, args: Json): Promise<string> {
       const options = parseOptions(args);
       const output = checkedOutput(args);
       return execute({ kind: 'file', path: input }, options, output);
+    }
+    case 'run_mode': {
+      const modeId = requiredString(args, 'mode');
+      const mode = catalog.modes.find((entry) => entry.id === modeId);
+      if (!mode) {
+        throw new Error(`Unknown mode "${modeId}". ${suggestions(modeId, catalog.modes.map((entry) => entry.id), 'list_modes')}`);
+      }
+      const values = parseModeValues(mode, args.args);
+      const options = parseOptions(args);
+      const output = checkedModeOutput(args, mode);
+      return execute({ kind: 'mode', mode: mode.id, values }, options, output);
     }
     default:
       throw new Error(`Unknown tool "${name}".`);
@@ -209,7 +242,7 @@ function fits(params: Param[], count: number): boolean {
   return params.filter((param) => !param.optional).length <= count && count <= params.length;
 }
 
-function suggestions(wanted: string, candidates: string[]): string {
+function suggestions(wanted: string, candidates: string[], tools = 'list_lattices or list_options'): string {
   const lowered = wanted.toLowerCase();
   const close = candidates
     .filter((candidate) => {
@@ -218,7 +251,7 @@ function suggestions(wanted: string, candidates: string[]): string {
     })
     .slice(0, 8);
   return close.length === 0
-    ? 'No close match; call list_lattices or list_options to see what exists.'
+    ? `No close match; call ${tools} to see what exists.`
     : `Close matches: ${close.join(', ')}.`;
 }
 
@@ -248,6 +281,93 @@ function checkedOutput(args: Json): string {
     throw new Error(`Output "${output}" already exists. Choose another path or pass overwrite: true.`);
   }
   return output;
+}
+
+/** Files a prefix or numbered mode would write, so overwrite can be refused before atomsk runs. */
+function generatedFiles(mode: Mode, output: string): string[] {
+  const directory = path.dirname(output);
+  if (!fs.existsSync(directory)) return [];
+  const extension = path.extname(output);
+  const base = path.basename(output);
+  const prefix = base.slice(0, base.length - extension.length);
+  const names = fs.readdirSync(directory).filter((name) => name.endsWith(extension));
+  const numbered = (name: string) => /\d+$/.test(name.slice(0, name.length - extension.length));
+  if (mode.output === 'prefix') {
+    return names.filter((name) => name.startsWith(`${prefix}_img`) && numbered(name)).map((name) => path.join(directory, name));
+  }
+  if (mode.output === 'numbered') {
+    return names.filter((name) => numbered(name) && (name.startsWith(base) || name.startsWith(prefix))).map((name) => path.join(directory, name));
+  }
+  return [];
+}
+
+/** The destination of a mode: a file, a prefix, an existing folder, or none. */
+function checkedModeOutput(args: Json, mode: Mode): string {
+  if (mode.output === 'none') return typeof args.output === 'string' && args.output !== '' ? args.output : process.cwd();
+  const output = requiredString(args, 'output');
+  if (mode.output === 'folder') {
+    if (!fs.existsSync(output) || !fs.statSync(output).isDirectory()) {
+      throw new Error(`Output "${output}" must be an existing folder for mode ${mode.id}.`);
+    }
+    return output;
+  }
+  if (args.overwrite !== true) {
+    const conflicts = [output, ...generatedFiles(mode, output)].filter((file) => fs.existsSync(file));
+    if (conflicts.length > 0) {
+      throw new Error(`Output "${conflicts[0]}" already exists. Choose another path or pass overwrite: true.`);
+    }
+  }
+  return output;
+}
+
+/** Validates run_mode's named arguments against the mode's catalog parameters. */
+function parseModeValues(mode: Mode, raw: Json): Record<string, string | string[]> {
+  const values: Json = raw ?? {};
+  if (typeof values !== 'object' || Array.isArray(values)) {
+    throw new Error('"args" must be an object keyed by parameter name; call list_modes to see the names.');
+  }
+  const known = new Set(mode.args.map((param) => param.name));
+  for (const key of Object.keys(values)) {
+    if (!known.has(key)) throw new Error(`Mode ${mode.id} has no parameter "${key}". Expected: ${[...known].join(', ')}.`);
+  }
+  const result: Record<string, string | string[]> = {};
+  for (const param of mode.args) {
+    const value = values[param.name];
+    if (value === undefined || value === null) {
+      if (!param.optional) throw new Error(`Mode ${mode.id}: "${param.name}" is required (${param.label}).`);
+      continue;
+    }
+    if (param.kind === 'files' || param.kind === 'list') {
+      if (!Array.isArray(value) || !value.every((item) => typeof item === 'string' || typeof item === 'number')) {
+        throw new Error(`Mode ${mode.id}: "${param.name}" must be an array of file paths.`);
+      }
+      const files = value.map(String).filter((file) => file !== '');
+      if (files.length < (param.min ?? 1)) {
+        throw new Error(`Mode ${mode.id}: "${param.name}" needs at least ${param.min ?? 1} file(s).`);
+      }
+      result[param.name] = files;
+    } else {
+      if (Array.isArray(value) || (typeof value !== 'string' && typeof value !== 'number')) {
+        throw new Error(`Mode ${mode.id}: "${param.name}" must be a string or number.`);
+      }
+      const text = String(value);
+      if (text === '') {
+        if (!param.optional) throw new Error(`Mode ${mode.id}: "${param.name}" cannot be empty.`);
+        continue;
+      }
+      if (param.choices && !param.choices.includes(text)) {
+        throw new Error(`Mode ${mode.id}: "${param.name}" must be one of: ${param.choices.join(', ')}.`);
+      }
+      result[param.name] = text;
+    }
+  }
+  if (mode.id === 'density') {
+    const dimension = String(result.dimension ?? '');
+    if ((dimension === '1d' || dimension === '2d') && !result.axis) {
+      throw new Error('Mode density: "axis" is required for a 1d or 2d calculation.');
+    }
+  }
+  return result;
 }
 
 if (require.main === module) {

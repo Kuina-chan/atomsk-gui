@@ -5,6 +5,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 const api: AtomskApi = {
   catalog: () => ipcRenderer.invoke('catalog'),
   initialFiles: () => ipcRenderer.invoke('initial-files'),
+  pickFiles: (multiple) => ipcRenderer.invoke('pick-files', multiple),
   save: (request) => ipcRenderer.invoke('save', request),
   showError: (message, detail) => ipcRenderer.invoke('show-error', message, detail),
   confirm: (message, detail, acceptLabel) => ipcRenderer.invoke('confirm', message, detail, acceptLabel),

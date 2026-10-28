@@ -2758,6 +2758,445 @@
       "args": []
     }
   ],
+  "modes": [
+    {
+      "id": "merge",
+      "flag": "--merge",
+      "label": "Merge",
+      "description": "Merge several systems into one. By default every atom is put in the first file's box; with a direction the systems are stacked along x, y or z. Options are applied after the merge.",
+      "output": "file",
+      "countFiles": true,
+      "args": [
+        {
+          "name": "direction",
+          "label": "Stack direction (optional; omit to merge into the first file's box)",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ],
+          "optional": true
+        },
+        {
+          "name": "files",
+          "label": "Files to merge (one path per line, at least 2)",
+          "kind": "files",
+          "min": 2
+        }
+      ]
+    },
+    {
+      "id": "average",
+      "flag": "--average",
+      "label": "Average",
+      "description": "Average atom positions, cell vectors and auxiliary properties over a list of snapshots. Options are applied to the averaged system.",
+      "output": "file",
+      "args": [
+        {
+          "name": "files",
+          "label": "Snapshots to average (one path per line)",
+          "kind": "list",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "id": "gather",
+      "flag": "--gather",
+      "label": "Gather snapshots",
+      "description": "Read several snapshots and write them into one multi-configuration file (animated XSF or XYZ). Options are applied to each snapshot.",
+      "output": "file",
+      "args": [
+        {
+          "name": "files",
+          "label": "Snapshots to gather (one path per line)",
+          "kind": "list",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "id": "list",
+      "flag": "--list",
+      "label": "Convert file list",
+      "description": "Convert every file named in the list. Output files keep their names and are written next to each input file.",
+      "output": "none",
+      "args": [
+        {
+          "name": "files",
+          "label": "Files to convert (one path per line)",
+          "kind": "list",
+          "min": 1
+        },
+        {
+          "name": "format",
+          "label": "Output format",
+          "kind": "choice",
+          "choices": [
+            "cfg",
+            "vesta",
+            "xsf",
+            "in",
+            "coo",
+            "d12",
+            "POSCAR",
+            "pw",
+            "fdf",
+            "xv",
+            "bop",
+            "bx",
+            "dlp",
+            "gin",
+            "imd",
+            "lmp",
+            "mol",
+            "xmd",
+            "cel",
+            "jems",
+            "atsk",
+            "cif",
+            "csv",
+            "dat",
+            "pdb",
+            "str",
+            "xyz",
+            "exyz",
+            "sxyz"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "copy-properties",
+      "flag": "--copy-properties",
+      "label": "Copy properties",
+      "description": "Copy auxiliary properties from the first file into the second one. The output keeps the positions and properties of the second file.",
+      "output": "file",
+      "args": [
+        {
+          "name": "file1",
+          "label": "File whose properties are copied",
+          "kind": "file"
+        },
+        {
+          "name": "file2",
+          "label": "File that receives the properties",
+          "kind": "file"
+        }
+      ]
+    },
+    {
+      "id": "ddplot",
+      "flag": "--ddplot",
+      "label": "ddplot visualization",
+      "description": "Build a ddplot file from an ideal system and a dislocated system with the same number of atoms. The output format is always dd.",
+      "output": "file",
+      "outputExtension": "dd",
+      "args": [
+        {
+          "name": "file1",
+          "label": "Ideal reference file",
+          "kind": "file"
+        },
+        {
+          "name": "file2",
+          "label": "Dislocated file",
+          "kind": "file"
+        }
+      ]
+    },
+    {
+      "id": "interpolate",
+      "flag": "--interpolate",
+      "label": "Interpolate configurations",
+      "description": "Build a chain of configurations by linearly interpolating atom positions and cell vectors between two systems. Outputs are named <prefix>_img0, <prefix>_img1, ...",
+      "output": "prefix",
+      "args": [
+        {
+          "name": "file1",
+          "label": "Initial configuration",
+          "kind": "file"
+        },
+        {
+          "name": "file2",
+          "label": "Final configuration",
+          "kind": "file"
+        },
+        {
+          "name": "images",
+          "label": "Number of intermediate configurations",
+          "kind": "int",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "id": "match-id",
+      "flag": "--match-id",
+      "label": "Match atom IDs",
+      "description": "Sort atoms of the second file into the same order as the atoms of the first file, keeping shells and auxiliary properties.",
+      "output": "file",
+      "args": [
+        {
+          "name": "file1",
+          "label": "Reference file",
+          "kind": "file"
+        },
+        {
+          "name": "file2",
+          "label": "File to reorder",
+          "kind": "file"
+        }
+      ]
+    },
+    {
+      "id": "polycrystal",
+      "flag": "--polycrystal",
+      "label": "Polycrystal",
+      "description": "Build a Voronoi polycrystal from a seed system and a parameter file. Grain positions and orientations can be random, on a lattice, or written node by node.",
+      "output": "file",
+      "args": [
+        {
+          "name": "seed",
+          "label": "Seed structure file",
+          "kind": "file"
+        },
+        {
+          "name": "parameters",
+          "label": "Polycrystal parameter file",
+          "kind": "file"
+        }
+      ]
+    },
+    {
+      "id": "unfold",
+      "flag": "--unfold",
+      "label": "Unfold snapshots",
+      "description": "Split a multi-configuration file (HISTORY, LAMMPS dump, PWscf output, OUTCAR, animated XSF or XYZ) into one file per snapshot. Outputs are named <prefix>1, <prefix>2, ...",
+      "output": "numbered",
+      "args": [
+        {
+          "name": "file",
+          "label": "Multi-configuration file",
+          "kind": "file"
+        }
+      ]
+    },
+    {
+      "id": "unwrap",
+      "flag": "--unwrap",
+      "label": "Unwrap coordinates",
+      "description": "Unwrap atom coordinates of the second file using the first file as the reference, undoing periodic boundary wrapping.",
+      "output": "file",
+      "args": [
+        {
+          "name": "reference",
+          "label": "Reference configuration",
+          "kind": "file"
+        },
+        {
+          "name": "configuration",
+          "label": "Configuration to unwrap",
+          "kind": "file"
+        }
+      ]
+    },
+    {
+      "id": "difference",
+      "flag": "--diff",
+      "label": "Difference",
+      "description": "Compute displacement vectors and statistics between two configurations. Writes several files prefixed with the second file's name into the chosen output folder.",
+      "output": "folder",
+      "args": [
+        {
+          "name": "file1",
+          "label": "Initial configuration",
+          "kind": "file"
+        },
+        {
+          "name": "file2",
+          "label": "Final configuration",
+          "kind": "file"
+        }
+      ]
+    },
+    {
+      "id": "density",
+      "flag": "--density",
+      "label": "Density",
+      "description": "Compute the 1D, 2D or 3D density of a property on a Gaussian grid. Writes the data (and, for 3D, interstitial/vacancy files) into the chosen output folder.",
+      "output": "folder",
+      "autoOptions": [
+        "-wrap"
+      ],
+      "args": [
+        {
+          "name": "file",
+          "label": "Structure file",
+          "kind": "file"
+        },
+        {
+          "name": "property",
+          "label": "Property (mass, a species, or an auxiliary property)",
+          "kind": "string"
+        },
+        {
+          "name": "dimension",
+          "label": "Dimension",
+          "kind": "choice",
+          "choices": [
+            "1d",
+            "2d",
+            "3d"
+          ]
+        },
+        {
+          "name": "axis",
+          "label": "Axis (required for 1d and 2d, omit for 3d)",
+          "kind": "choice",
+          "choices": [
+            "x",
+            "y",
+            "z"
+          ],
+          "optional": true
+        },
+        {
+          "name": "sigma",
+          "label": "Gaussian standard deviation σ (Å)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "id": "rdf",
+      "flag": "--rdf",
+      "label": "Radial distribution function",
+      "description": "Compute the radial distribution function(s) up to a maximum radius. Writes the data files into the chosen output folder.",
+      "output": "folder",
+      "autoOptions": [
+        "-wrap"
+      ],
+      "args": [
+        {
+          "name": "file",
+          "label": "Structure file or list file",
+          "kind": "file"
+        },
+        {
+          "name": "rmax",
+          "label": "Maximum radius Rmax (Å)",
+          "kind": "float"
+        },
+        {
+          "name": "dr",
+          "label": "Shell width dR (Å)",
+          "kind": "float"
+        }
+      ]
+    },
+    {
+      "id": "local-symmetry",
+      "flag": "--local-symmetry",
+      "label": "Local symmetry",
+      "description": "Compute the local symmetry (centrosymmetry) parameter of each atom and write it as an auxiliary property. Options are applied before the calculation.",
+      "output": "file",
+      "autoOptions": [
+        "-wrap"
+      ],
+      "args": [
+        {
+          "name": "file",
+          "label": "Structure file",
+          "kind": "file"
+        }
+      ]
+    },
+    {
+      "id": "nye",
+      "flag": "--nye",
+      "label": "Nye tensor",
+      "description": "Compute per-atom strain, rotation and Nye tensors from a reference system and the system to analyse. The reference may be a full system, a unit cell, or NULL.",
+      "output": "file",
+      "autoOptions": [
+        "-wrap"
+      ],
+      "args": [
+        {
+          "name": "reference",
+          "label": "Reference file, a unit cell, or NULL",
+          "kind": "file"
+        },
+        {
+          "name": "configuration",
+          "label": "Configuration to analyse",
+          "kind": "file"
+        }
+      ]
+    },
+    {
+      "id": "edm",
+      "flag": "--edm",
+      "label": "Electric dipole moments",
+      "description": "Compute individual electric dipole moments of polyhedra. Charges must be set in the input file or with the properties option. Writes several files into the chosen output folder.",
+      "output": "folder",
+      "args": [
+        {
+          "name": "file",
+          "label": "Structure file",
+          "kind": "file"
+        },
+        {
+          "name": "species",
+          "label": "Species at the corners of the polyhedra",
+          "kind": "species"
+        },
+        {
+          "name": "nnn",
+          "label": "Neighbour count (positive) or cutoff radius (negative, Å); 0 for automatic",
+          "kind": "int"
+        }
+      ],
+      "autoOptions": [
+        "-wrap"
+      ]
+    },
+    {
+      "id": "electronic-polarization",
+      "flag": "--electronic-polarization",
+      "label": "Electronic polarization",
+      "description": "Compute the electronic polarization of each ion in a core-shell model. Charges and shells must be present in the input. Writes files into the chosen output folder.",
+      "output": "folder",
+      "args": [
+        {
+          "name": "file",
+          "label": "Structure file with cores and shells",
+          "kind": "file"
+        }
+      ]
+    },
+    {
+      "id": "help",
+      "flag": "--help",
+      "label": "Help",
+      "description": "Print the Atomsk help, optionally for one topic. The output is shown in the log; no structure file is written.",
+      "output": "none",
+      "args": [
+        {
+          "name": "topic",
+          "label": "Topic (optional)",
+          "kind": "choice",
+          "choices": [
+            "modes",
+            "options",
+            "formats"
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
   "formats": [
     {
       "id": "cfg",
@@ -2802,7 +3241,8 @@
         "in"
       ],
       "read": true,
-      "write": true
+      "write": true,
+      "keyword": "in"
     },
     {
       "id": "coorat",
@@ -2812,7 +3252,8 @@
         "COORAT"
       ],
       "read": true,
-      "write": true
+      "write": true,
+      "keyword": "coo"
     },
     {
       "id": "crystal",
@@ -2821,7 +3262,8 @@
         "d12"
       ],
       "read": true,
-      "write": true
+      "write": true,
+      "keyword": "d12"
     },
     {
       "id": "pos",
@@ -2830,7 +3272,8 @@
         "POSCAR"
       ],
       "read": true,
-      "write": true
+      "write": true,
+      "keyword": "POSCAR"
     },
     {
       "id": "outcar",
@@ -2839,7 +3282,8 @@
         "OUTCAR"
       ],
       "read": true,
-      "write": false
+      "write": false,
+      "keyword": "OUTCAR"
     },
     {
       "id": "pw",
@@ -2857,7 +3301,8 @@
         "out"
       ],
       "read": true,
-      "write": false
+      "write": false,
+      "keyword": "pwout"
     },
     {
       "id": "fdf",

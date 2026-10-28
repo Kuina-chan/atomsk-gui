@@ -1,6 +1,6 @@
 {
   "name": "atomsk-gui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Graphical front end for the Atomsk command-line tool",
   "homepage": "https://github.com/Kuina-chan/atomsk-gui",
   "author": "Kuina-chan",

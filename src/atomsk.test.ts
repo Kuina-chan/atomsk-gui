@@ -15,7 +15,7 @@ const temporaryDirectory = () => fs.mkdtempSync(path.join(os.tmpdir(), 'atomsk-g
 test('create structure with orientation and option', () => {
   const source: Source = { kind: 'create', lattice: 'fcc', parameters: ['4.02', 'Al'], orientation: ['[100]', '[010]', '[001]'] };
   assert.deepEqual(
-    buildArguments(source, [{ flag: '-duplicate', arguments: ['2', '2', '2'] }], 'out.cfg'),
+    buildArguments(source, [{ flag: '-duplicate', arguments: ['2', '2', '2'] }], ['out.cfg']),
     ['--create', 'fcc', '4.02', 'Al', 'orient', '[100]', '[010]', '[001]', '-duplicate', '2', '2', '2', 'out.cfg', '-ow'],
   );
 });
@@ -23,7 +23,7 @@ test('create structure with orientation and option', () => {
 test('create without orientation drops empty optional parameters', () => {
   const source: Source = { kind: 'create', lattice: 'fcc', parameters: ['4.05', 'Al', ''], orientation: [] };
   assert.deepEqual(
-    buildArguments(source, [{ flag: '-duplicate', arguments: ['2', '2', '2'] }], 'al.xsf'),
+    buildArguments(source, [{ flag: '-duplicate', arguments: ['2', '2', '2'] }], ['al.xsf']),
     ['--create', 'fcc', '4.05', 'Al', '-duplicate', '2', '2', '2', 'al.xsf', '-ow'],
   );
 });
@@ -31,10 +31,10 @@ test('create without orientation drops empty optional parameters', () => {
 test('opened file omits empty optional arguments; no options converts', () => {
   const source: Source = { kind: 'file', path: 'in.xsf' };
   assert.deepEqual(
-    buildArguments(source, [{ flag: '-cut', arguments: ['above', '5', 'z', ''] }], 'out.lmp'),
+    buildArguments(source, [{ flag: '-cut', arguments: ['above', '5', 'z', ''] }], ['out.lmp']),
     ['in.xsf', '-cut', 'above', '5', 'z', 'out.lmp', '-ow'],
   );
-  assert.deepEqual(buildArguments({ kind: 'file', path: 'a.cfg' }, [], 'b.xyz'), ['a.cfg', 'b.xyz', '-ow']);
+  assert.deepEqual(buildArguments({ kind: 'file', path: 'a.cfg' }, [], ['b.xyz']), ['a.cfg', 'b.xyz', '-ow']);
 });
 
 test('atomsk lookup order', () => {
@@ -90,6 +90,57 @@ test('writes in the output directory and over its own input', { skip: process.pl
   fs.rmSync(root, { recursive: true });
 });
 
+test('mode arguments include the merge file count and automatic wrap', () => {
+  const merge: Source = { kind: 'mode', mode: 'merge', values: { direction: 'z', files: ['a.cfg', 'b.xsf'] } };
+  assert.deepEqual(
+    buildArguments(merge, [], ['out.cfg']),
+    ['--merge', 'z', '2', 'a.cfg', 'b.xsf', 'out.cfg', '-ow'],
+  );
+  const rdf: Source = { kind: 'mode', mode: 'rdf', values: { file: 'a.cfg', rmax: '10', dr: '0.1' } };
+  assert.deepEqual(buildArguments(rdf, [], []), ['--rdf', 'a.cfg', '10', '0.1', '-wrap', '-ow']);
+  const localSymmetry: Source = { kind: 'mode', mode: 'local-symmetry', values: { file: 'a.cfg' } };
+  assert.deepEqual(
+    buildArguments(localSymmetry, [{ flag: '-wrap', arguments: [] }], ['sym.cfg']),
+    ['--local-symmetry', 'a.cfg', '-wrap', 'sym.cfg', '-ow'],
+  );
+});
+
+test('modes write a file, a prefix, a folder and a list file', { skip: process.platform === 'win32' }, async () => {
+  const root = temporaryDirectory();
+  const program = path.join(root, 'atomsk');
+  fs.writeFileSync(program, '#!/bin/sh\nprintf "%s\\n" "$@" > args.txt\ncp "$2" list-copy.txt 2>/dev/null || true\n', { mode: 0o755 });
+  const first = path.join(root, 'a.cfg');
+  const second = path.join(root, 'b.cfg');
+  const dump = path.join(root, 'dump.lmc');
+  for (const file of [first, second, dump]) fs.writeFileSync(file, '');
+  const readArguments = (directory: string) => fs.readFileSync(path.join(directory, 'args.txt'), 'utf8').trimEnd().split('\n');
+
+  let result = await writeStructure(program, { kind: 'mode', mode: 'average', values: { files: [first, second] } }, [], path.join(root, 'average.cfg'));
+  assert.ok(result.success, result.log);
+  let args = readArguments(root);
+  assert.equal(args[0], '--average');
+  assert.match(args[1], /atomsk-gui-list-.*[/\\]files\.lst$/);
+  assert.deepEqual(args.slice(2), ['average.cfg', '-ow']);
+  assert.deepEqual(fs.readFileSync(path.join(root, 'list-copy.txt'), 'utf8').trimEnd().split('\n'), ['a.cfg', 'b.cfg']);
+
+  result = await writeStructure(program, { kind: 'mode', mode: 'unfold', values: { file: dump } }, [], path.join(root, 'snap.cfg'));
+  assert.ok(result.success, result.log);
+  args = readArguments(root);
+  assert.deepEqual(args, ['--unfold', dump, 'snap.cfg', '-ow']);
+
+  const folder = path.join(root, 'output');
+  fs.mkdirSync(folder);
+  result = await writeStructure(program, { kind: 'mode', mode: 'difference', values: { file1: first, file2: second } }, [], folder);
+  assert.ok(result.success, result.log);
+  args = readArguments(folder);
+  assert.deepEqual(args, ['--diff', first, second, '-ow']);
+
+  result = await writeStructure(program, { kind: 'mode', mode: 'unfold', values: { file: dump } }, [], path.join(root, 'no-extension'));
+  assert.equal(result.success, false);
+  assert.match(result.log, /extension Atomsk can write/);
+  fs.rmSync(root, { recursive: true });
+});
+
 test('picks archive from download page', () => {
   const page = `<li><a href="./code/atomsk_b0.13.1
 .tar.gz" title="src"></a></li>
@@ -126,11 +177,36 @@ test('mcp initialize echoes a supported version', async () => {
   assert.equal(reply.result.serverInfo.name, 'atomsk-gui');
 });
 
-test('mcp lists five tools, ignores notifications, rejects unknown methods', async () => {
+test('mcp lists its tools, ignores notifications, rejects unknown methods', async () => {
   const names = (await request('tools/list')).result.tools.map((tool: { name: string }) => tool.name);
-  assert.deepEqual(names, ['list_lattices', 'list_options', 'list_formats', 'create_structure', 'transform_file']);
+  assert.deepEqual(names, ['list_lattices', 'list_options', 'list_formats', 'list_modes', 'create_structure', 'transform_file', 'run_mode']);
   assert.equal(await handleRequest({ jsonrpc: '2.0', method: 'notifications/initialized' }), undefined);
   assert.equal((await request('nope')).error.code, -32601);
+});
+
+test('mcp lists and validates modes before running', async () => {
+  const modes = JSON.parse((await request('tools/call', { name: 'list_modes', arguments: {} })).result.content[0].text);
+  assert.ok(modes.some((mode: { id: string }) => mode.id === 'merge'));
+  assert.ok(modes.some((mode: { id: string }) => mode.id === 'rdf'));
+
+  const call = async (args: unknown) => (await request('tools/call', { name: 'run_mode', arguments: args })).result;
+  let result = await call({ mode: 'nope' });
+  assert.equal(result.isError, true);
+  assert.match(result.content[0].text, /Unknown mode/);
+  result = await call({ mode: 'merge', args: { files: ['a.cfg'] }, output: '/tmp/x.cfg' });
+  assert.match(result.content[0].text, /at least 2/);
+  result = await call({ mode: 'merge', args: { files: ['a.cfg', 'b.cfg'], nope: 'x' }, output: '/tmp/x.cfg' });
+  assert.match(result.content[0].text, /no parameter "nope"/);
+  result = await call({ mode: 'merge', args: { files: ['a.cfg', 'b.cfg'] } });
+  assert.match(result.content[0].text, /"output" is required/);
+  result = await call({ mode: 'difference', args: { file1: 'a.cfg', file2: 'b.cfg' }, output: '/definitely/missing' });
+  assert.match(result.content[0].text, /must be an existing folder/);
+
+  const root = temporaryDirectory();
+  fs.writeFileSync(path.join(root, 'chain_img0.cfg'), '');
+  result = await call({ mode: 'interpolate', args: { file1: 'a.cfg', file2: 'b.cfg', images: '2' }, output: path.join(root, 'chain.cfg') });
+  assert.match(result.content[0].text, /already exists/);
+  fs.rmSync(root, { recursive: true });
 });
 
 test('mcp create_structure validates before running', async () => {
